@@ -17,7 +17,6 @@ const Sidebar: React.FC<SidebarProps> = ({ tags }) => {
         minWidth: 250,
         position: 'sticky', // または 'fixed' 
         top: 0, // スクロール時にトップに固定
-        height: '100vh', // 高さを画面全体にする
         overflowY: 'auto', // コンテンツが多い場合にスクロール可能にする
       }}
     >

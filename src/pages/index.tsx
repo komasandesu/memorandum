@@ -24,7 +24,7 @@ interface HomeProps {
   tags: string[];
 }
 
-const POSTS_PER_PAGE = 5; // 1ページあたりの投稿数
+const POSTS_PER_PAGE = 10; // 1ページあたりの投稿数
 
 const Home: React.FC<HomeProps> = ({ posts, tags }) => {
   const [page, setPage] = useState<number>(1);
