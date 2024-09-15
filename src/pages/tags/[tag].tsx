@@ -132,6 +132,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     })
     .filter(post => post.frontMatter.tags.includes(params!.tag as string));
 
+    
+  // 投稿を更新日が新しい順にソート
+  posts.sort((a, b) => new Date(b.frontMatter.date).getTime() - new Date(a.frontMatter.date).getTime());
+
   return {
     props: {
       posts,
