@@ -1,9 +1,8 @@
 import React from 'react';
-import { Typography, Container, Box, Button, IconButton } from '@mui/material';
+import { Typography, Container, Box, Button } from '@mui/material';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import PublicIcon from '@mui/icons-material/Public';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import CodeIcon from '@mui/icons-material/Code';
 
 const Bio: React.FC = () => {

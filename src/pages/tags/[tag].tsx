@@ -1,5 +1,4 @@
 import { Box, Card, CardContent, CardMedia, Typography, Container, Chip, Pagination } from '@mui/material';
-import Image from "next/image";
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import fs from 'fs';
@@ -46,8 +45,8 @@ const TagPage: React.FC<TagPageProps> = ({ posts, tag }) => {
         </Typography>
         {paginatedPosts.length > 0 ? (
           <Box>
-            {paginatedPosts.map((post, index) => (
-              <Card sx={{ mb: 3, display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
+            {paginatedPosts.map((post) => (
+              <Card key={post.slug} sx={{ mb: 3, display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
                 <CardMedia
                   component="img"
                   sx={{ width: { xs: '100%', md: 200 }, height: 140, objectFit: 'cover' }}

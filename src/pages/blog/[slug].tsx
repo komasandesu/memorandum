@@ -5,7 +5,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import Math from '../../components/Math';  // カスタムコンポーネントのインポート
-import { AppBar, Container, Toolbar, Typography, Box, Chip } from '@mui/material';
+import { Container, Typography, Box, Chip } from '@mui/material';
 import { Nav, Button, CodeBlock } from '../../components';
 import Link from 'next/link';
 
@@ -33,7 +33,7 @@ interface PostPageProps {
   allTags: string[];
 }
 
-const PostPage: React.FC<PostPageProps> = ({ frontMatter: { title, date, tags }, mdxSource, allTags }) => {
+const PostPage: React.FC<PostPageProps> = ({ frontMatter: { title, date, tags }, mdxSource }) => {
   return (
     <Box>
       <Container maxWidth="lg" sx={{ mt: 4 }}>
