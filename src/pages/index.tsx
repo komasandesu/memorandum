@@ -100,6 +100,9 @@ export const getStaticProps = async () => {
       slug: filename.split('.')[0]
     };
   });
+  // 投稿を更新日が新しい順にソート
+  posts.sort((a, b) => new Date(b.frontMatter.date).getTime() - new Date(a.frontMatter.date).getTime());
+
 
   // タグのリストを取得
   const tags = Array.from(new Set(posts.flatMap(post => post.frontMatter.tags || [])));
