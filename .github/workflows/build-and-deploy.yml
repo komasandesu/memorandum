@@ -33,7 +33,7 @@ jobs:
     - name: Build Docker Image
       run: |
         docker-compose build
-        docker tag next:latest ${{ env.IMAGE_URL }}
+        docker tag blog-next:latest ${{ env.IMAGE_URL }}
 
     - name: Push Docker Image
       run: |
