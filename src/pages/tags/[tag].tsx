@@ -22,7 +22,7 @@ interface TagPageProps {
     tag: string;
 }
 
-const POSTS_PER_PAGE = 5; // 1ページあたりの投稿数
+const POSTS_PER_PAGE = 10; // 1ページあたりの投稿数
 
 const TagPage: React.FC<TagPageProps> = ({ posts, tag }) => {
   const [page, setPage] = useState<number>(1);
