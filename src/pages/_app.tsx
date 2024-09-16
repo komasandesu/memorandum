@@ -2,6 +2,7 @@
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import Head from 'next/head';
 import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 import type { AppProps } from 'next/app';
 
 // MUIのテーマを作成します
@@ -28,11 +29,12 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline /> {/* MUI のデフォルトスタイリングをリセットします */}
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           <Nav />
-          <main>
+          <main style={{ flexGrow: 1, marginBottom: '32px' }}> {/* フッター用の余白 */}
             <Component {...pageProps} />
           </main>
+          <Footer />
         </div>
       </ThemeProvider>
     </>
