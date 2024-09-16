@@ -5,11 +5,20 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 
 const Nav = () => {
   return (
-    <AppBar position="static" color="primary">
+    <AppBar 
+      position="static" 
+      color="primary"
+    >
       <Container maxWidth="lg">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           {/* 左側の要素 */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 3 
+            }}
+          >
             <Link href="/" passHref style={{ textDecoration: 'none' }}>
               <Typography
                 variant="h5"
