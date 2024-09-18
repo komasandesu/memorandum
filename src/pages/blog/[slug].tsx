@@ -9,6 +9,7 @@ import { Container, Typography, Box, Chip } from '@mui/material';
 import { Nav, Button, CodeBlock } from '../../components';
 import Link from 'next/link';
 import { TwitterTweetEmbed } from 'react-twitter-embed';  // 追加
+import Youtube from 'react-youtube';
 
 import { ReactNode } from "react";
 
@@ -21,6 +22,7 @@ const components = {
     <CodeBlock {...props} />
   ),
   Tweet: ({ id }: { id: string }) => <TwitterTweetEmbed tweetId={id} />,  // 追加
+  Youtube: ({ id }: { id: string }) => <Youtube videoId={id} />,  // 追加
 };
 
 interface FrontMatter {
