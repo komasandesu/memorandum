@@ -14,13 +14,17 @@ const createAppTheme = (mode: 'light' | 'dark') =>
     palette: {
       mode: mode,
       primary: {
-        main: '#1976d2',
+        main: mode === 'light' ? '#1976d2' : '#68ACD1', // ダークモード時は明るい青
       },
       secondary: {
-        main: '#dc004e',
+        main: mode === 'light' ? '#dc004e' : '#f48fb1', // ダークモード時は明るいピンク
       },
       text: {
         primary: mode === 'light' ? '#000000' : '#ffffff', // ライトモード時は黒、ダークモード時は白
+      },
+      background: {
+        default: mode === 'light' ? '#ffffff' : '#121212', // ダークモード時の背景色
+        paper: mode === 'light' ? '#ffffff' : '#1e1e1e', // ダークモード時のカード色
       },
     },
     components: {
