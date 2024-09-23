@@ -23,6 +23,23 @@ const components = {
   ),
   Tweet: ({ id }: { id: string }) => <TwitterTweetEmbed tweetId={id} />,  // 追加
   Youtube: ({ id }: { id: string }) => <Youtube videoId={id} />,  // 追加
+  // カスタムリンクスタイルを設定
+  a: (props: JSX.IntrinsicAttributes & { href?: string; children?: ReactNode }) => (
+    <Link href={props.href ?? ''} passHref>
+      <Typography
+        component="a"
+        sx={{
+          color: (theme) => theme.palette.mode === 'dark' ? '#ffffff' : '#000000', // ダークモード時は白、ライトモード時は黒
+          textDecoration: 'none',
+          '&:hover': {
+            textDecoration: 'underline',
+          },
+        }}
+      >
+        {props.children}
+      </Typography>
+    </Link>
+  ),
 };
 
 interface FrontMatter {

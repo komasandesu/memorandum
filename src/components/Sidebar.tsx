@@ -29,7 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ tags }) => {
             <Chip
               label={tag}
               sx={{ mr: 1, mb: 1, cursor: 'pointer' }}
-              color="secondary"
+              color="primary"
             />
           </Link>
         ))}

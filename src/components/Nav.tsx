@@ -2,8 +2,16 @@ import { AppBar, Toolbar, Typography, Button, Container, IconButton, Box } from 
 import Link from 'next/link';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import { PaletteMode } from '@mui/material';
 
-const Nav = () => {
+interface NavProps {
+  toggleMode: () => void;
+  currentMode: PaletteMode;
+}
+
+const Nav: React.FC<NavProps> = ({ toggleMode, currentMode }) => {
   return (
     <AppBar 
       position="static" 
@@ -11,6 +19,9 @@ const Nav = () => {
     >
       <Container maxWidth="lg">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Button color="inherit" onClick={toggleMode}>
+            {currentMode === 'light' ? <LightModeIcon /> : <DarkModeIcon />}
+          </Button>
           {/* 左側の要素 */}
           <Box 
             sx={{ 

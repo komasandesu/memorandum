@@ -43,15 +43,29 @@ const Home: React.FC<HomeProps> = ({ posts, tags }) => {
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {paginatedPosts.map((post, index) => (
             <Card key={index} sx={{ mb: 3, display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
-              <CardMedia
-                component="img"
-                sx={{ width: { xs: '100%', md: 200 }, height: 140, objectFit: 'cover' }}
-                image={post.frontMatter.thumbnailUrl || ''}
-                alt="thumbnail"
-              />
+
+              <Link href={`/blog/${post.slug}`} passHref>
+                <CardMedia
+                  component="img"
+                  sx={{ width: { xs: '100%', md: 200 }, height: 140, objectFit: 'cover' }}
+                  image={post.frontMatter.thumbnailUrl || ''}
+                  alt="thumbnail"
+                />
+              </Link>
+              
               <CardContent>
-                <Link href={`/blog/${post.slug}`} passHref>
-                  <Typography variant="h5" component="div">
+                <Link href={`/blog/${post.slug}`} passHref style={{ textDecoration: 'none' }}>
+                  <Typography 
+                    variant="h5" 
+                    component="div"
+                    sx={{
+                      color: (theme) => theme.palette.text.primary,  // テーマに基づくテキストカラー
+                      textDecoration: 'none',
+                      '&:hover': {
+                        textDecoration: 'underline',
+                      },
+                    }}
+                  >
                     {post.frontMatter.title}
                   </Typography>
                 </Link>
