@@ -20,7 +20,7 @@ const Bio: React.FC = () => {
 
             {/* 扱うプログラミング言語 */}
             <Box sx={{ mb: 4 }}>
-                <Typography variant="h5" component="h2" gutterBottom>
+                <Typography variant="h5" component="h2" gutterBottom sx={{ textAlign: 'center' }}>
                     <CodeIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
                     使えるプログラミング言語
                 </Typography>
@@ -33,11 +33,11 @@ const Bio: React.FC = () => {
 
             {/* SNSアカウント */}
             <Box sx={{ mb: 4 }}>
-                <Typography variant="h5" component="h2" gutterBottom>
+                <Typography variant="h5" component="h2" gutterBottom sx={{ textAlign: 'center' }}>
                     <PublicIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
                     SNS等のアカウント
                 </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'center', gap: 2 }}>
                     <Button
                         variant="contained"
                         color="primary"
@@ -45,6 +45,7 @@ const Bio: React.FC = () => {
                         href="https://twitter.com/k0masandesu"
                         target="_blank"
                         rel="noopener"
+                        fullWidth={true} // スマホの場合はボタンをフル幅に
                     >
                         Twitter
                     </Button>
@@ -55,6 +56,7 @@ const Bio: React.FC = () => {
                         href="https://github.com/komasandesu"
                         target="_blank"
                         rel="noopener"
+                        fullWidth={true} // スマホの場合はボタンをフル幅に
                     >
                         GitHub
                     </Button>
@@ -64,6 +66,7 @@ const Bio: React.FC = () => {
                         href="https://atcoder.jp/users/komasan"
                         target="_blank"
                         rel="noopener"
+                        fullWidth={true} // スマホの場合はボタンをフル幅に
                     >
                         AtCoder
                     </Button>
@@ -73,11 +76,13 @@ const Bio: React.FC = () => {
                         href="https://shitforces.herokuapp.com/account/atmosphere"
                         target="_blank"
                         rel="noopener"
+                        fullWidth={true} // スマホの場合はボタンをフル幅に
                     >
                         Shitforces
                     </Button>
                 </Box>
             </Box>
+
 
         </Container>
     );
