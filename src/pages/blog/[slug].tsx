@@ -18,28 +18,32 @@ const components = {
   Button,
   SyntaxHighlighter,
   Math,  // カスタムコンポーネントを追加
-  code: (props: JSX.IntrinsicAttributes & { children?: ReactNode }) => (
+  code: (props: JSX.IntrinsicAttributes & { children?: ReactNode; className?: string }) => (
     <CodeBlock {...props} />
   ),
   Tweet: ({ id }: { id: string }) => <TwitterTweetEmbed tweetId={id} />,  // 追加
   Youtube: ({ id }: { id: string }) => <Youtube videoId={id} />,  // 追加
   // カスタムリンクスタイルを設定
-  a: (props: JSX.IntrinsicAttributes & { href?: string; children?: ReactNode }) => (
-    <Link href={props.href ?? ''} passHref>
-      <Typography
-        component="a"
-        sx={{
-          color: (theme) => theme.palette.mode === 'dark' ? '#ffffff' : '#000000', // ダークモード時は白、ライトモード時は黒
-          textDecoration: 'none',
-          '&:hover': {
-            textDecoration: 'underline',
-          },
-        }}
-      >
-        {props.children}
-      </Typography>
-    </Link>
-  ),
+  a: (props: { href?: string; children?: ReactNode }) => {
+    const { href, children } = props;
+    return (
+      <Link href={href ?? ''} passHref>
+        <Typography
+          component="span" // componentをspanに設定
+          sx={{
+            color: (theme) => theme.palette.mode === 'dark' ? '#ffffff' : '#000000',
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'underline',
+            },
+          }}
+        >
+          {children}
+        </Typography>
+      </Link>
+    );
+  },
+  
 };
 
 interface FrontMatter {
