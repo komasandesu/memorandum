@@ -9,393 +9,96 @@ tags: []
 # コードテスト用
 
 ```cpp:a.cpp
-    //#define _GLIBCXX_DEBUG
-    #include <bits/stdc++.h>
-    using namespace std;
-    #if __has_include(<atcoder/all>)
-    #include <atcoder/all>
-    using namespace atcoder;
-    #endif
-    #define rrep(i, a, b) for (int i = (a); i < (b); ++i)
-    #define rep(i, n) rrep(i,0,n)
-    #define bfor(bit,a,b) for(int bit = (a); bit < (1<<(b)); ++bit)
-    #define brep(bit,n) bfor(bit,0,n)
-    typedef long long ll;
-    typedef long double ld;
-    typedef pair<int, int> PII;
-    typedef pair<ll, ll> PLL;
-    const int INF = INT_MAX / 2; const ll INFL = 1LL << 60;
-    #define MOD (ll)998244353
-    #define ALL(a)  (a).begin(),(a).end()
-    #define rALL(a)  (a).rbegin(),(a).rend()
+//#define _GLIBCXX_DEBUG
+#include <bits/stdc++.h>
+using namespace std;
+#if __has_include(<atcoder/all>)
+#include <atcoder/all>
+using namespace atcoder;
+#endif
+#define rrep(i, a, b) for (int i = (a); i < (b); ++i)
+#define rep(i, n) rrep(i,0,n)
+#define bfor(bit,a,b) for(int bit = (a); bit < (1<<(b)); ++bit)
+#define brep(bit,n) bfor(bit,0,n)
+typedef pair<int, int> PII;
+typedef long long ll;
+typedef long double ld;
+const int INF = INT_MAX / 2; const ll INFL = 1LL << 60;
+#define MOD (ll)998244353
+#define ALL(a)  (a).begin(),(a).end()
 
-    template <typename T>
-    using priority_queue_ascend = priority_queue<T, vector<T>, greater<T>>;
+// 辺の情報
+struct Edge
+{
+	// 行先
+	ll to;
 
-    // constexpr int DX[] = {1, 0, -1, 0};
-    // constexpr int DY[] = {0, 1, 0, -1};
+	// コスト
+	ll cost;
+};
 
-    constexpr int dx[] = {1, 0, -1, 0, 1, 1, -1, -1};
-    constexpr int dy[] = {0, 1, 0, -1, 1, -1, 1, -1};
+using Graph = std::vector<std::vector<Edge>>;
 
-    //using Graph = vector<vector<int>>;
-    using mint = modint998244353;
-    using MINT = modint;
+// { distance, from }
+using Pair = std::pair<long long, long long>;
 
-    #include<ext/pb_ds/assoc_container.hpp>
-    #include<ext/pb_ds/tree_policy.hpp>
-    #include<ext/pb_ds/tag_and_trait.hpp>
-    using namespace __gnu_pbds;
-    //tree<key,null_type,less<key>,rb_tree_tag,tree_order_statistics_node_update> var_name; setの上位互換
+// ダイクストラ法 (1.1 基本実装)
+// distances は頂点数と同じサイズ, 全要素 INF で初期化しておく
+void Dijkstra(const Graph& graph, std::vector<long long>& distances, int startIndex)
+{
+	// 「現時点での最短距離, 頂点」の順に取り出す priority_queue
+	// デフォルトの priority_queue は降順に取り出すため std::greater を使う
+	std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair>> q;
+	q.emplace((distances[startIndex] = 0), startIndex);
+
+	while (!q.empty())
+	{
+		const long long distance = q.top().first;
+		const int from = q.top().second;
+		q.pop();
+
+		// 最短距離でなければ処理しない
+		if (distances[from] < distance)
+		{
+			continue;
+		}
+
+		// 現在の頂点からの各辺について
+		for (const auto& edge : graph[from])
+		{
+			// to までの新しい距離
+			const long long d = (distances[from] + edge.cost);
+
+			// d が現在の記録より小さければ更新
+			if (d < distances[edge.to])
+			{
+				q.emplace((distances[edge.to] = d), edge.to);
+			}
+		}
+	}
+    
+}
 
 
-    /*******************************************************/
-    // 多倍長テンプレ
-    /* ---------------------- ここから ---------------------- */
-    #include <boost/multiprecision/cpp_dec_float.hpp>
-    #include <boost/multiprecision/cpp_int.hpp>
-    namespace multiprecision = boost::multiprecision;
-    // 任意長整数型
-    using Bint = multiprecision::cpp_int;
-    // 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-    using Real = multiprecision::number<multiprecision::cpp_dec_float<1024>>;
-    /* ---------------------- ここまで ---------------------- */
-    /*******************************************************/
-    struct S{
-        long long value;
-        int size;
-    };
-    using F = long long;
 
-    const F ID = 8e18;
+int main() {
+    // 入力を受け取る
+    int N, M, r; cin >> N >> M >> r;
 
-    S op(S a, S b){ return {a.value+b.value, a.size+b.size}; }
-    S e(){ return {0, 0}; }
-    S mapping(F f, S x){
-        if(f != ID) x.value = f*x.size;
-        return x;
-    }
-    F composition(F f, F g){ return (f == ID ? g : f); }
-    F id(){ return ID; }
-    /*
-    using S = ll;
-
-    using F = ll;
-
-    const F ID = -1;
-
-    S op(S a, S b) { return max(a,b); }
-
-    S e() { return 0; }
-
-    S mapping(F f, S a) { 
-    if(f==ID)return a;
-    else return f;
-    }
-
-    F composition(F f, F g) { 
-    if(f==ID)return g;
-    else return f;
+    vector<vector<Edge>> G(N);  // G[i]：頂点 i を始点とする辺情報を格納する
+    for(int i = 0; i < M; ++i) {
+        int u, v, w; cin >> u >> v >> w;
+        //u--;v--;
+        G[u].push_back({v, w});
+        //G[v].push_back({u, w});
     }
 
-    F id() { return ID; }
+    vector<ll> dist(N, INFL);   // dist[i]：頂点 0 から頂点 i への暫定的な経路長
 
-    /*******************************************************/
-    template<typename T1, typename T2> inline bool chmax(T1 &a, T2 b) {
-        bool compare = a < b;
-        if(compare) a = b;
-        return compare;
-    }
-    template<typename T1, typename T2> inline bool chmin(T1 &a, T2 b) {
-        bool compare = a > b;
-        if(compare) a = b;
-        return compare;
-    }
-    template<typename T1, typename T2> inline ll round_num(T1 A, T2 B) {
-        return A / B - (A % B < 0);
-    }
-    /*******************************************************/
+    Dijkstra(G, dist, r);
 
-    /*******************************************************/
-    template <typename T> bool next_combination(const T first, const T last, int k);
-    /*******************************************************/
-    void judge(bool ok){
-    if(ok) cout << "Yes" << endl;
-    else cout << "No" << endl;
-    }
+    rep(i,N)cout << dist[i] << endl;
 
-    template <typename T> void print(const std::vector<T>& v)
-    {
-    cout << "{ ";
-    for(auto x:v){
-        cout << x << ", ";
-    }
-    cout << "}" << endl;
-    }
-    /*******************************************************/
-    /*  関数名          ntodec(const char c)
-        説明            char で 文字{0,1,2,...,9,A,B,...,Z} を受け取り、
-    　　　　　　　　　　　 int で {0,1,2,...9,10,11,...,35}に直して返す。
-    　　　　　　　　　　　 それ以外の文字が来た場合は-1を返す。
-        使用ライブラリ   なし
-    */
-    ll ntodec(const char c);
-    /*  関数名          decton(const int n)
-        説明            int で 数値 0〜35 を受け取り、文字{0,1,2,...,9,A,B,...,Z}に直して char で返す。
-    　　　　　　　　　　　 それ以外の数字が来た場合は \0 を返す。
-        使用ライブラリ  なし
-    */
-    char decton(const ll n);
-    /*  関数名          pow_ll(long long x, long long n)
-        説明            x^n を計算する。long long 対応
-        使用ライブラリ  なし
-    */
-    inline long long pow_ll(long long x, long long n);
-    /*  関数名          n_ary(string str, int n, int m)
-        説明            n 進数で表現された数値を文字列 str で受け取り、m 進数に直して文字列で出力する。
-        使用ライブラリ  string
-        使用自作関数    ntodec, decton, pow_ll
-        制約事項        36進数までの対応。負の値には対応していない。
-    */
-    string n_ary(string str, ll n, ll m);
-
-
-    /*******************************************************/
-
-    set<int> st;
-
-    bool dfs(int p, int now, vector<vector<int>> &Graph, vector<bool> &seen, vector<bool> &Erase){ //trueなら削除可能
-        seen[now] = true;
-        bool is_erase = true;
-
-        for(auto x:Graph[now]){
-            if(x==p)continue;
-            if(seen[x])continue;
-            seen[x] = true;
-            if(!dfs(now,x,Graph,seen,Erase)){
-                is_erase = false;
-            }
-        }
-        if(is_erase && !st.count(now) ){
-            Erase[now] = true;
-            return true;
-        }
-
-        return false;
-        
-    };
-    /*******************************************************/
-
-    int main() {
-
-        ios::sync_with_stdio(false);
-        cin.tie(nullptr);
-
-        // 入力を受け取る
-
-        int N,K;
-        cin >> N >> K;
-
-        vector<vector<int>> Graph(N);
-
-        vector<int> A(N-1),B(N-1);
-        rep(i,N-1){
-            cin >> A[i] >> B[i];
-            A[i]--;
-            B[i]--;
-
-            Graph[A[i]].push_back(B[i]);
-            Graph[B[i]].push_back(A[i]);
-        }
-
-        rep(i,K){
-            int v;cin >> v;
-            v--;
-            st.insert(v);
-        }
-        int root = 0;
-        rep(i,N){
-            if(st.count(i))root = i;
-        }
-
-        vector<bool> seen(N,false);
-        vector<bool> Erase(N,false);
-
-        auto p = dfs(-1,root,Graph,seen,Erase);
-
-        // print(Erase);
-
-        int cnt = 0;
-        rep(i,N)cnt += Erase[i];
-
-        cout << N-cnt;
-
-        //小数の桁数の出力指定
-        //cout<<fixed<<setprecision(10);
-        //入力の高速化用のコード
-        //ios::sync_with_stdio(false);
-        //cin.tie(nullptr);
-        
-        /*ostringstream ss;
-        ss << setw(n) << std::setfill('0') << h;
-        string s = ss.str();*/
-
-        //vec.assign(n_rows, vector<int>(n_cols, value));
-
-        //a/bの除算の切り上げは(a+(b-1))/b
-
-        //切り捨て除算
-        //A,B が負を取り得る場合 A / B - (A % B < 0)
-
-        //ソート(昇順)
-        //sort(std::begin(vec), std::end(vec));
-        //ソート(降順)
-        //sort(std::rbegin(vec), std::rend(vec));
-
-        //while(cin>>num)
-
-        
-        // std::*_element は，イテレーターを返すので '*' で値を取得する
-        //int min = *std::min_element(vec.begin(), vec.end());
-        //int max = *std::max_element(vec.begin(), vec.end());
-        //ll sum = std::reduce(std::begin(v), std::end(v));
-
-        
-        //mapのkeyにbitsetを使うとき
-        //map< ll,ll > mp;
-        //bit.to_ullong()でllに変換
-    }
-
-    /*******************************************************/
-    template <typename T> bool next_combination(const T first, const T last, int k) {
-        const T subset = first + k;
-        // empty container | k = 0 | k == n 
-        if (first == last || first == subset || last == subset) {
-            return false;
-        }
-        T src = subset;
-        while (first != src) {
-            src--;
-            if (*src < *(last - 1)) {
-                T dest = subset;
-                while (*src >= *dest) {
-                    dest++;
-                }
-                iter_swap(src, dest);
-                rotate(src + 1, dest + 1, last);
-                rotate(subset, subset + (last - dest) - 1, last);
-                return true;
-            }
-        }
-        // restore
-        rotate(first, subset, last);
-        return false;
-    }
-    /*******************************************************/
-    ll ntodec(const char c){
-        switch(c){
-            case '0': return 0;
-            case '1': return 1;
-            case '2': return 2;
-            case '3': return 3;
-            case '4': return 4;
-            case '5': return 5;
-            case '6': return 6;
-            case '7': return 7;
-            case '8': return 8;
-            case '9': return 9;
-            case 'A': return 10;
-            case 'B': return 11;
-            case 'C': return 12;
-            case 'D': return 13;
-            case 'E': return 14;
-            case 'F': return 15;
-            case 'G': return 16;
-            case 'H': return 17;
-            case 'I': return 18;
-            case 'J': return 19;
-            case 'K': return 20;
-            case 'L': return 21;
-            case 'M': return 22;
-            case 'N': return 23;
-            case 'O': return 24;
-            case 'P': return 25;
-            case 'Q': return 26;
-            case 'R': return 27;
-            case 'S': return 28;
-            case 'T': return 29;
-            case 'U': return 30;
-            case 'V': return 31;
-            case 'W': return 32;
-            case 'X': return 33;
-            case 'Y': return 34;
-            case 'Z': return 35;
-            default : return -1;
-        }
-    }
-    char decton(const ll n){
-        switch(n){
-            case 0: return '0';
-            case 1: return '1';
-            case 2: return '2';
-            case 3: return '3';
-            case 4: return '4';
-            case 5: return '5';
-            case 6: return '6';
-            case 7: return '7';
-            case 8: return '8';
-            case 9: return '9';
-            case 10: return 'A';
-            case 11: return 'B';
-            case 12: return 'C';
-            case 13: return 'D';
-            case 14: return 'E';
-            case 15: return 'F';
-            case 16: return 'G';
-            case 17: return 'H';
-            case 18: return 'I';
-            case 19: return 'J';
-            case 20: return 'K';
-            case 21: return 'L';
-            case 22: return 'M';
-            case 23: return 'N';
-            case 24: return 'O';
-            case 25: return 'P';
-            case 26: return 'Q';
-            case 27: return 'R';
-            case 28: return 'S';
-            case 29: return 'T';
-            case 30: return 'U';
-            case 31: return 'V';
-            case 32: return 'W';
-            case 33: return 'X';
-            case 34: return 'W';
-            case 35: return 'Z';
-            default : return '\0';
-        }
-    }
-    inline long long pow_ll(long long x, long long n){
-        long long ret = x;
-        if(n==0) return 1;
-        for(long long i=1; i<n; i++){
-            ret *= x;
-        }
-        return ret;
-    }
-    string n_ary(string str, ll n, ll m){
-        unsigned long tmp = 0;
-        string ret;
-
-        for(int i=0; i<str.length(); i++){
-            tmp += (unsigned long) ntodec(str[str.length()-1-i]) * pow_ll(n, i);
-        }
-
-        if(tmp==0) return "0";
-        while(tmp!=0){
-            ret = decton(tmp%m) + ret;
-            tmp/=m;
-        }
-        return ret;
-    }
+}
 ```
 
