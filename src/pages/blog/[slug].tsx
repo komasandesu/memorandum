@@ -27,7 +27,14 @@ const components = {
   a: (props: { href?: string; children?: ReactNode }) => {
     const { href, children } = props;
     return (
-      <Link href={href ?? ''} passHref>
+      <a
+        href={href ?? ''}
+        target="_blank" // 新規タブで開く
+        rel="noopener noreferrer" // セキュリティのための属性
+        style={{
+          textDecoration: 'none',
+        }}
+      >
         <Typography
           component="span" // componentをspanに設定
           sx={{
@@ -40,9 +47,10 @@ const components = {
         >
           {children}
         </Typography>
-      </Link>
+      </a>
     );
   },
+  
   
 };
 
