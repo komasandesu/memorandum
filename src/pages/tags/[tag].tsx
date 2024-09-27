@@ -6,6 +6,8 @@ import path from 'path';
 import matter from 'gray-matter';
 import { useEffect, useState } from 'react';
 
+const BASE_PATH = process.env.BASE_PATH || ''; //サムネイル用
+
 interface PostType {
     slug: string;
     frontMatter: {
@@ -51,7 +53,7 @@ const TagPage: React.FC<TagPageProps> = ({ posts, tag }) => {
                   <CardMedia
                     component="img"
                     sx={{ width: { xs: '100%', md: 200 }, height: 140, objectFit: 'cover' }}
-                    image={post.frontMatter.thumbnailUrl || ''}
+                    image={`${BASE_PATH}/thumbnails/${post.frontMatter.thumbnailUrl || 'default-thumbnail.png'}`}
                     alt="thumbnail"
                   />
                 </Link>
