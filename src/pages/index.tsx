@@ -1,11 +1,13 @@
-import { Box, Card, CardMedia, CardContent, Typography, Container, Chip, Pagination } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Typography, Container, Chip, Pagination } from '@mui/material';
 import Link from 'next/link';
-import Image from 'next/image';
+// import Image from 'next/image';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import Sidebar from '../components/Sidebar'; // インポート
 import { useState } from 'react';
+
+const BASE_PATH = process.env.BASE_PATH || '';
 
 interface FrontMatter {
   title: string;
@@ -47,16 +49,11 @@ const Home: React.FC<HomeProps> = ({ posts, tags }) => {
 
               <Link href={`/blog/${post.slug}`} passHref>
                 <CardMedia
-                  component="div"
-                  sx={{ width: { xs: '100%', md: 200 }, height: 140, position: 'relative' }}
-                >
-                  <Image
-                    src={post.frontMatter.thumbnailUrl || '/default-thumbnail.jpg'}
-                    alt="thumbnail"
-                    fill
-                    style={{ objectFit: 'cover' }} // fillモードにするためにobjectFitを指定
-                  />
-                </CardMedia>
+                  component="img"
+                  sx={{ width: { xs: '100%', md: 200 }, height: 140, objectFit: 'cover' }}
+                  image={`${BASE_PATH}${post.frontMatter.thumbnailUrl || `${BASE_PATH}$/default-thumbnail.jpg`}`}
+                  alt="thumbnail"
+                />
               </Link>
               
               <CardContent>
