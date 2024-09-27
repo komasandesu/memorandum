@@ -7,7 +7,7 @@ import matter from 'gray-matter';
 import Sidebar from '../components/Sidebar'; // インポート
 import { useState } from 'react';
 
-const BASE_PATH = process.env.BASE_PATH || '';
+const BASE_PATH = process.env.BASE_PATH || ''; //サムネイル用
 
 interface FrontMatter {
   title: string;
@@ -51,7 +51,7 @@ const Home: React.FC<HomeProps> = ({ posts, tags }) => {
                 <CardMedia
                   component="img"
                   sx={{ width: { xs: '100%', md: 200 }, height: 140, objectFit: 'cover' }}
-                  image={`${BASE_PATH}${post.frontMatter.thumbnailUrl || `${BASE_PATH}$/default-thumbnail.jpg`}`}
+                  image={`${BASE_PATH}/thumbnails/${post.frontMatter.thumbnailUrl || 'default-thumbnail.png'}`}
                   alt="thumbnail"
                 />
               </Link>
