@@ -77,6 +77,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>こまの備忘録</title>
+        <link rel="icon" href={`${process.env.BASE_PATH || ''}/favicon.ico`} />
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>
