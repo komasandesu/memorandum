@@ -9,6 +9,7 @@ const nextConfig = {
     env: {
       BASE_PATH: isProd ? `/${repositoryName}` : '',
     },
+    basePath: isProd ? `/${repositoryName}` : '',
 }
 
 module.exports = nextConfig
