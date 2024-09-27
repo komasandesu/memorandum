@@ -1,5 +1,6 @@
-import { Box, Card, CardContent, CardMedia, Typography, Container, Chip, Pagination } from '@mui/material';
+import { Box, Card, CardMedia, CardContent, Typography, Container, Chip, Pagination } from '@mui/material';
 import Link from 'next/link';
+import Image from 'next/image';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -46,11 +47,16 @@ const Home: React.FC<HomeProps> = ({ posts, tags }) => {
 
               <Link href={`/blog/${post.slug}`} passHref>
                 <CardMedia
-                  component="img"
-                  sx={{ width: { xs: '100%', md: 200 }, height: 140, objectFit: 'cover' }}
-                  image={post.frontMatter.thumbnailUrl || ''}
-                  alt="thumbnail"
-                />
+                  component="div"
+                  sx={{ width: { xs: '100%', md: 200 }, height: 140, position: 'relative' }}
+                >
+                  <Image
+                    src={post.frontMatter.thumbnailUrl || '/default-thumbnail.jpg'}
+                    alt="thumbnail"
+                    fill
+                    style={{ objectFit: 'cover' }} // fillモードにするためにobjectFitを指定
+                  />
+                </CardMedia>
               </Link>
               
               <CardContent>
