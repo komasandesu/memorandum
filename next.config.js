@@ -1,7 +1,7 @@
 // next.config.js
 const isProd = process.env.NODE_ENV === 'production';
 
-const repositoryName = 'komasandesu.github.io/memorandum'; // あなたのGitHubリポジトリ名
+const repositoryName = '/memorandum'; // あなたのGitHubリポジトリ名
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
