@@ -1,6 +1,5 @@
 import { Box, Card, CardContent, CardMedia, Typography, Container, Chip, Pagination } from '@mui/material';
 import Link from 'next/link';
-// import Image from 'next/image';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';

@@ -48,23 +48,42 @@ const TagPage: React.FC<TagPageProps> = ({ posts, tag }) => {
         {paginatedPosts.length > 0 ? (
           <Box>
             {paginatedPosts.map((post) => (
-              <Card key={post.slug} sx={{ mb: 3, display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
+              <Card 
+                key={post.slug} 
+                sx={{ 
+                  mb: 3, 
+                  display: 'flex', 
+                  flexDirection: { xs: 'column', md: 'row' }
+                }}
+              >
                 <Link href={`/blog/${post.slug}`} passHref>
                   <CardMedia
                     component="img"
-                    sx={{ width: { xs: '100%', md: 200 }, height: 140, objectFit: 'cover' }}
+                    sx={{ 
+                      width: { xs: '100%', md: 200 }, 
+                      height: 170, 
+                      objectFit: 'cover', // 画像のアスペクト比を維持しつつ、カードのサイズにフィットさせる
+                      margin: 0, // マージンをゼロに設定
+                      padding: 0 // パディングもゼロに設定
+                    }}
                     image={`${BASE_PATH}/thumbnails/${post.frontMatter.thumbnailUrl || 'default-thumbnail.png'}`}
                     alt="thumbnail"
                   />
                 </Link>
-
-                <CardContent>
+              
+                <CardContent 
+                  sx={{ 
+                    overflowX: 'auto', 
+                    overflowY: 'hidden', 
+                    maxHeight: 300,
+                  }}
+                > {/* 高さを制限し、オーバーフロー時にスクロール可能に */}
                   <Link href={`/blog/${post.slug}`} passHref style={{ textDecoration: 'none' }}>
                     <Typography 
                       variant="h5" 
                       component="div"
                       sx={{
-                        color: (theme) => theme.palette.text.primary,  // テーマに基づくテキストカラー
+                        color: (theme) => theme.palette.text.primary,
                         textDecoration: 'none',
                         '&:hover': {
                           textDecoration: 'underline',
@@ -80,13 +99,25 @@ const TagPage: React.FC<TagPageProps> = ({ posts, tag }) => {
                   <Typography variant="caption" color="text.secondary" sx={{ mb: 2 }}>
                     {post.frontMatter.date}
                   </Typography>
-                  <div>
+              
+                  {/* タグの実装 */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexWrap: 'nowrap', // 改行を防止
+                      overflowX: 'auto', // 横方向にスクロールを有効にする
+                      overflowY: 'hidden', // 横方向にスクロールを有効にする
+                      width: '100%', // 幅を100%に設定
+                      padding: 1,
+                      height: 40, // 高さを固定することでタグの有無で幅が変わらないようにする
+                    }}
+                  >
                     {post.frontMatter.tags?.map((tag: string) => (
                       <Link key={tag} href={`/tags/${tag}`} passHref>
-                        <Chip label={tag} sx={{ mr: 1, mb: 1, cursor: 'pointer' }} color="primary" />
+                        <Chip label={tag} sx={{ marginRight: 1 }} color="primary" />
                       </Link>
                     ))}
-                  </div>
+                  </Box>
                 </CardContent>
               </Card>
             ))}
