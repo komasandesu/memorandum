@@ -36,6 +36,6 @@ yarn-error.log*
 next-env.d.ts
 
 # mdx
-test.mdx
-test_math.mdx
-test_code.mdx
+/posts/test.mdx
+/posts/test_math.mdx
+/posts/test_code.mdx
