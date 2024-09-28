@@ -43,13 +43,6 @@ const createAppTheme = (mode: 'light' | 'dark') =>
   });
 
 export default function App({ Component, pageProps }: AppProps) {
-  // クライアントサイドでのみ実行されるフラグ
-  const [isClient, setIsClient] = useState(false);
-
-  // クライアントサイドかどうかをチェック
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   // ユーザーのデフォルト設定に基づくモード（システムのダークモード設定を取得）
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -59,10 +52,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
   // クライアントサイドでのみ、ユーザーの設定に基づいてモードを決定
   useEffect(() => {
-    if (isClient) {
-      setMode(prefersDarkMode ? 'dark' : 'light');
-    }
-  }, [prefersDarkMode, isClient]);
+    setMode(prefersDarkMode ? 'dark' : 'light');
+  }, [prefersDarkMode]);
 
   // モードを切り替える関数
   const toggleMode = () => {
