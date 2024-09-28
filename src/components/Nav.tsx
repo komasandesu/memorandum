@@ -83,6 +83,7 @@ const Nav: React.FC<NavProps> = ({ toggleMode, currentMode }) => {
             padding: 2,
             boxShadow: 2,
             transition: 'transform 0.3s ease-in-out',
+            display: { xs: 'block', md: 'none' },
           }}
         >
           <List>
