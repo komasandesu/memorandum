@@ -13,7 +13,9 @@ import Youtube from 'react-youtube';
 
 import { ReactNode } from "react";
 
-const components = {
+const BASE_PATH = process.env.BASE_PATH || ''; //画像用
+
+const components = (file_name: string) => ({
   Nav,
   Button,
   SyntaxHighlighter,
@@ -50,9 +52,10 @@ const components = {
       </a>
     );
   },
-  
-  
-};
+  img: (props: JSX.IntrinsicElements['img']) => (
+    <img {...props} src={`${BASE_PATH}/images/${file_name}/${props.src}`} alt={props.title} style={{ maxWidth: '100%' }} />
+  ),
+});
 
 interface FrontMatter {
   title: string;
@@ -64,9 +67,11 @@ interface PostPageProps {
   frontMatter: FrontMatter;
   mdxSource: MDXRemoteSerializeResult;
   allTags: string[];
+  slug: string;
 }
 
-const PostPage: React.FC<PostPageProps> = ({ frontMatter: { title, date, tags }, mdxSource }) => {
+const PostPage: React.FC<PostPageProps> = ({ frontMatter: { title, date, tags }, mdxSource, slug }) => {
+  const mdxComponents = components(slug); // 画像フォルダ名をmdxファイル名と同じにする
   return (
     <Box>
       <Container maxWidth="lg" sx={{ mt: 4 }}>
@@ -94,7 +99,7 @@ const PostPage: React.FC<PostPageProps> = ({ frontMatter: { title, date, tags },
           </Box>
         </Box>
 
-        <MDXRemote {...mdxSource} components={components} />
+        <MDXRemote {...mdxSource} components={mdxComponents} />
       </Container>
     </Box>
   );
