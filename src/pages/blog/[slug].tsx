@@ -15,37 +15,11 @@ import { useState, useEffect } from 'react';
 
 import { ReactNode } from "react";
 
+
 const BASE_PATH = process.env.BASE_PATH || ''; //画像用
 
 const LinkRenderer = (props: { href?: string; children?: ReactNode }) => {
   const { href, children } = props;
-
-  // Twitter/X のツイートリンクを判別し、ツイートIDを抽出
-  const twitterMatch = href?.match(/(twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)/);
-  
-  // YouTube 通常動画とショート動画のリンクを判別し、動画IDを抽出
-  const youtubeMatch = href?.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    // クライアントサイドでのみ動的に埋め込む
-    setIsClient(true);
-  }, []);
-
-  if (twitterMatch) {
-    const tweetId = twitterMatch[4]; // ツイートIDは正規表現の4番目のキャプチャグループ
-
-    // クライアントサイドでのみ <TwitterTweetEmbed> をレンダリング
-    return isClient ? <TwitterTweetEmbed tweetId={tweetId} /> : null;
-  }
-
-  if (youtubeMatch) {
-    const videoId = youtubeMatch[1]; // YouTubeの動画IDは正規表現の1番目のキャプチャグループ
-
-    // クライアントサイドでのみ <Youtube> をレンダリング
-    return isClient ? <Youtube videoId={videoId} /> : null;
-  }
 
   // 通常のリンクとして扱う
   return (
@@ -71,21 +45,42 @@ const LinkRenderer = (props: { href?: string; children?: ReactNode }) => {
   );
 };
 
+const extractYoutubeId = (url: string): string | undefined => {
+  const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : undefined;
+};
+
+const extractTweetId = (url: string): string | undefined => {
+  const regex = /(twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)/;
+  const match = url.match(regex);
+  return match ? match[4] : undefined;
+};
+
 const components = (file_name: string) => ({
   Nav,
   Button,
   SyntaxHighlighter,
   Math,
-  Tweet: ({ id }: { id: string }) => <TwitterTweetEmbed tweetId={id} />,  // 追加
-  Youtube: ({ id }: { id: string }) => <Youtube videoId={id} />,  // 追加
   code: (props: JSX.IntrinsicAttributes & { children?: ReactNode; className?: string }) => (
     <CodeBlock {...props} />
   ),
+  Tweet: ({ id, url }: { id?: string; url?: string }) => {
+    // IDまたはURLのいずれかが指定されている場合に対応
+    const tweetId = id || (url ? extractTweetId(url) : undefined);
+    return tweetId ? <TwitterTweetEmbed tweetId={tweetId} /> : null;
+  },
+  Youtube: ({ id, url }: { id?: string; url?: string }) => {
+    // IDまたはURLのいずれかが指定されている場合に対応
+    const videoId = id || (url ? extractYoutubeId(url) : undefined);
+    return videoId ? <Youtube videoId={videoId} /> : null;
+  },
   a: LinkRenderer,  // aタグの代わりにLinkRendererコンポーネントを使用
   img: (props: JSX.IntrinsicElements['img']) => (
     <img {...props} src={`${BASE_PATH}/images/${file_name}/${props.src}`} alt={props.title} style={{ maxWidth: '100%' }} />
   ),
 });
+
 
 interface FrontMatter {
   title: string;
