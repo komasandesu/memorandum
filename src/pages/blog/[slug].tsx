@@ -11,6 +11,8 @@ import Link from 'next/link';
 import { TwitterTweetEmbed } from 'react-twitter-embed';  // 追加
 import Youtube from 'react-youtube';
 
+import { useState, useEffect } from 'react';
+
 import { ReactNode } from "react";
 
 const BASE_PATH = process.env.BASE_PATH || ''; //画像用
@@ -28,6 +30,38 @@ const components = (file_name: string) => ({
   // カスタムリンクスタイルを設定
   a: (props: { href?: string; children?: ReactNode }) => {
     const { href, children } = props;
+    
+    // Twitter/X のツイートリンクを判別し、ツイートIDを抽出
+    const twitterMatch = href?.match(/(twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)/);
+    
+    // YouTube 通常動画とショート動画のリンクを判別し、動画IDを抽出
+    const youtubeMatch = href?.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+
+    if (twitterMatch) {
+      const tweetId = twitterMatch[4]; // ツイートIDは正規表現の4番目のキャプチャグループ
+      const [isClient, setIsClient] = useState(false);
+
+      useEffect(() => {
+        // クライアントサイドでのみ動的に埋め込む
+        setIsClient(true);
+      }, []);
+
+      // クライアントサイドでのみ <TwitterTweetEmbed> をレンダリング
+      return isClient ? <TwitterTweetEmbed tweetId={tweetId} /> : null;
+    }
+
+    if (youtubeMatch) {
+      const videoId = youtubeMatch[1]; // YouTubeの動画IDは正規表現の1番目のキャプチャグループ
+      const [isClient, setIsClient] = useState(false);
+
+      useEffect(() => {
+        setIsClient(true);
+      }, []);
+
+      // クライアントサイドでのみ <Youtube> をレンダリング
+      return isClient ? <Youtube videoId={videoId} /> : null;
+    }
+
     return (
       <a
         href={href ?? ''}
