@@ -17,75 +17,71 @@ import { ReactNode } from "react";
 
 const BASE_PATH = process.env.BASE_PATH || ''; //画像用
 
+const LinkRenderer = (props: { href?: string; children?: ReactNode }) => {
+  const { href, children } = props;
+
+  // Twitter/X のツイートリンクを判別し、ツイートIDを抽出
+  const twitterMatch = href?.match(/(twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)/);
+  
+  // YouTube 通常動画とショート動画のリンクを判別し、動画IDを抽出
+  const youtubeMatch = href?.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // クライアントサイドでのみ動的に埋め込む
+    setIsClient(true);
+  }, []);
+
+  if (twitterMatch) {
+    const tweetId = twitterMatch[4]; // ツイートIDは正規表現の4番目のキャプチャグループ
+
+    // クライアントサイドでのみ <TwitterTweetEmbed> をレンダリング
+    return isClient ? <TwitterTweetEmbed tweetId={tweetId} /> : null;
+  }
+
+  if (youtubeMatch) {
+    const videoId = youtubeMatch[1]; // YouTubeの動画IDは正規表現の1番目のキャプチャグループ
+
+    // クライアントサイドでのみ <Youtube> をレンダリング
+    return isClient ? <Youtube videoId={videoId} /> : null;
+  }
+
+  // 通常のリンクとして扱う
+  return (
+    <a
+      href={href ?? ''}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ textDecoration: 'none' }}
+    >
+      <Typography
+        component="span"
+        sx={{
+          color: (theme) => theme.palette.mode === 'dark' ? '#ffffff' : '#000000',
+          textDecoration: 'none',
+          '&:hover': {
+            textDecoration: 'underline',
+          },
+        }}
+      >
+        {children}
+      </Typography>
+    </a>
+  );
+};
+
 const components = (file_name: string) => ({
   Nav,
   Button,
   SyntaxHighlighter,
-  Math,  // カスタムコンポーネントを追加
+  Math,
+  Tweet: ({ id }: { id: string }) => <TwitterTweetEmbed tweetId={id} />,  // 追加
+  Youtube: ({ id }: { id: string }) => <Youtube videoId={id} />,  // 追加
   code: (props: JSX.IntrinsicAttributes & { children?: ReactNode; className?: string }) => (
     <CodeBlock {...props} />
   ),
-  Tweet: ({ id }: { id: string }) => <TwitterTweetEmbed tweetId={id} />,  // 追加
-  Youtube: ({ id }: { id: string }) => <Youtube videoId={id} />,  // 追加
-  // カスタムリンクスタイルを設定
-  a: (props: { href?: string; children?: ReactNode }) => {
-    const { href, children } = props;
-    
-    // Twitter/X のツイートリンクを判別し、ツイートIDを抽出
-    const twitterMatch = href?.match(/(twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)/);
-    
-    // YouTube 通常動画とショート動画のリンクを判別し、動画IDを抽出
-    const youtubeMatch = href?.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-
-    if (twitterMatch) {
-      const tweetId = twitterMatch[4]; // ツイートIDは正規表現の4番目のキャプチャグループ
-      const [isClient, setIsClient] = useState(false);
-
-      useEffect(() => {
-        // クライアントサイドでのみ動的に埋め込む
-        setIsClient(true);
-      }, []);
-
-      // クライアントサイドでのみ <TwitterTweetEmbed> をレンダリング
-      return isClient ? <TwitterTweetEmbed tweetId={tweetId} /> : null;
-    }
-
-    if (youtubeMatch) {
-      const videoId = youtubeMatch[1]; // YouTubeの動画IDは正規表現の1番目のキャプチャグループ
-      const [isClient, setIsClient] = useState(false);
-
-      useEffect(() => {
-        setIsClient(true);
-      }, []);
-
-      // クライアントサイドでのみ <Youtube> をレンダリング
-      return isClient ? <Youtube videoId={videoId} /> : null;
-    }
-
-    return (
-      <a
-        href={href ?? ''}
-        target="_blank" // 新規タブで開く
-        rel="noopener noreferrer" // セキュリティのための属性
-        style={{
-          textDecoration: 'none',
-        }}
-      >
-        <Typography
-          component="span" // componentをspanに設定
-          sx={{
-            color: (theme) => theme.palette.mode === 'dark' ? '#ffffff' : '#000000',
-            textDecoration: 'none',
-            '&:hover': {
-              textDecoration: 'underline',
-            },
-          }}
-        >
-          {children}
-        </Typography>
-      </a>
-    );
-  },
+  a: LinkRenderer,  // aタグの代わりにLinkRendererコンポーネントを使用
   img: (props: JSX.IntrinsicElements['img']) => (
     <img {...props} src={`${BASE_PATH}/images/${file_name}/${props.src}`} alt={props.title} style={{ maxWidth: '100%' }} />
   ),
