@@ -11,8 +11,6 @@ import Link from 'next/link';
 import { TwitterTweetEmbed } from 'react-twitter-embed';  // 追加
 import Youtube from 'react-youtube';
 
-import { useState, useEffect } from 'react';
-
 import { ReactNode } from "react";
 
 
