@@ -4,22 +4,29 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import Math from '../../components/Math';  // カスタムコンポーネントのインポート
+import Math from '../../components/Math';
 import { Container, Typography, Box, Chip } from '@mui/material';
 import { Nav, Button, CodeBlock } from '../../components';
 import Link from 'next/link';
-import { TwitterTweetEmbed } from 'react-twitter-embed';  // 追加
+import { TwitterTweetEmbed } from 'react-twitter-embed';
 import Youtube from 'react-youtube';
+import rehypeSlug from 'rehype-slug';
+
+import type { Node } from 'unist';
+import { visit } from 'unist-util-visit';
+import { toString } from 'hast-util-to-string';
+
+import { Theme } from '@mui/material/styles';
+
+import { TableOfContents } from '../../components';
 
 import { ReactNode } from "react";
 
-
-const BASE_PATH = process.env.BASE_PATH || ''; //画像用
+const BASE_PATH = process.env.BASE_PATH || '';
 
 const LinkRenderer = (props: { href?: string; children?: ReactNode }) => {
   const { href, children } = props;
 
-  // 通常のリンクとして扱う
   return (
     <a
       href={href ?? ''}
@@ -30,7 +37,7 @@ const LinkRenderer = (props: { href?: string; children?: ReactNode }) => {
       <Typography
         component="span"
         sx={{
-          color: (theme) => theme.palette.mode === 'dark' ? '#ffffff' : '#000000',
+          color: (theme: Theme) => theme.palette.mode === 'dark' ? '#ffffff' : '#000000',
           textDecoration: 'none',
           '&:hover': {
             textDecoration: 'underline',
@@ -42,6 +49,7 @@ const LinkRenderer = (props: { href?: string; children?: ReactNode }) => {
     </a>
   );
 };
+
 
 const extractYoutubeId = (url: string): string | undefined => {
   const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -93,8 +101,23 @@ interface PostPageProps {
   slug: string;
 }
 
-const PostPage: React.FC<PostPageProps> = ({ frontMatter: { title, date, tags }, mdxSource, slug }) => {
-  const mdxComponents = components(slug); // 画像フォルダ名をmdxファイル名と同じにする
+
+
+interface PostPageProps {
+  frontMatter: FrontMatter;
+  mdxSource: MDXRemoteSerializeResult;
+  allTags: string[];
+  slug: string;
+  toc: {
+    id: string;
+    text: string;
+    level: number;
+  }[];
+}
+
+const PostPage: React.FC<PostPageProps> = ({ frontMatter: { title, date, tags }, mdxSource, slug, toc }) => {
+  const mdxComponents = components(slug);
+  
   return (
     <Box>
       <Container maxWidth="lg" sx={{ mt: 4 }}>
@@ -106,7 +129,7 @@ const PostPage: React.FC<PostPageProps> = ({ frontMatter: { title, date, tags },
           {date}
         </Typography>
         
-        <Box sx={{ mt: 4 }}>
+        <Box sx={{ mt: 4, mb: 4  }}>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
             {tags.map(tag => (
               <Link href={`/tags/${tag}`} passHref key={tag}>
@@ -121,6 +144,8 @@ const PostPage: React.FC<PostPageProps> = ({ frontMatter: { title, date, tags },
             ))}
           </Box>
         </Box>
+
+        <TableOfContents toc={toc} />
 
         <MDXRemote {...mdxSource} components={mdxComponents} />
       </Container>
@@ -149,20 +174,60 @@ interface StaticProps {
   };
 }
 
+function rehypeHeadingLinks(headingList: { id: string, text: string, level: number }[]) {
+  const headingCounts: Record<string, number> = {};
+
+  return (tree: Node) => {
+    visit(tree, 'element', (node: any) => {
+      if (typeof node.tagName === 'string' && node.tagName.match(/^h[1-6]$/)) {
+        const level = parseInt(node.tagName.charAt(1));
+        const textContent = toString(node);
+        const baseId = (node.properties?.id as string | undefined) || textContent.toLowerCase().replace(/\s+/g, '-');
+        let id = baseId;
+
+        if (headingCounts[baseId]) {
+          id = `${baseId}-${headingCounts[baseId]}`;
+          headingCounts[baseId] += 1;
+        } else {
+          headingCounts[baseId] = 1;
+        }
+
+        node.properties = {
+          ...node.properties,
+          id,
+        };
+
+        headingList.push({ id, text: textContent, level });
+      }
+    });
+  };
+}
+
 const getStaticProps = async ({ params: { slug } }: StaticProps) => {
   const markdownWithMeta = fs.readFileSync(path.join('posts', slug + '.mdx'), 'utf-8');
-
   const { data: frontMatter, content } = matter(markdownWithMeta);
-  const mdxSource = await serialize(content);
+
+  const headingList: { id: string, text: string, level: number }[] = [];
+  const mdxSource = await serialize(content, {
+    mdxOptions: {
+      rehypePlugins: [
+        rehypeSlug,
+        [rehypeHeadingLinks, headingList],
+      ],
+    },
+  });
 
   return {
     props: {
       frontMatter,
       slug,
-      mdxSource
+      mdxSource,
+      toc: headingList,
     }
   };
 };
+
+
 
 export { getStaticProps, getStaticPaths };
 export default PostPage;
