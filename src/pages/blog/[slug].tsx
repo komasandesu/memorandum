@@ -174,12 +174,27 @@ interface StaticProps {
   };
 }
 
-function rehypeHeadingLinks(headingList: { id: string, text: string, level: number }[]) {
+import type { Element, Properties  } from 'hast';
+
+interface HeadingNode extends Element {
+  tagName: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  properties: Properties;
+}
+
+function isHeadingNode(node: Node): node is HeadingNode {
+  return (
+    node.type === 'element' &&
+    typeof (node as Element).tagName === 'string' &&
+    /^h[1-6]$/.test((node as Element).tagName)
+  );
+}
+
+function rehypeHeadingLinks(headingList: { id: string; text: string; level: number }[]) {
   const headingCounts: Record<string, number> = {};
 
   return (tree: Node) => {
-    visit(tree, 'element', (node: any) => {
-      if (typeof node.tagName === 'string' && node.tagName.match(/^h[1-6]$/)) {
+    visit(tree, 'element', (node: Element) => {
+      if (isHeadingNode(node)) {
         const level = parseInt(node.tagName.charAt(1));
         const textContent = toString(node);
         const baseId = (node.properties?.id as string | undefined) || textContent.toLowerCase().replace(/\s+/g, '-');
@@ -192,11 +207,12 @@ function rehypeHeadingLinks(headingList: { id: string, text: string, level: numb
           headingCounts[baseId] = 1;
         }
 
-        node.properties = {
-          ...node.properties,
-          id,
-        };
-
+        // propertiesがundefinedの場合は初期化
+        if (!node.properties) {
+          node.properties = {};
+        }
+        
+        node.properties.id = id;
         headingList.push({ id, text: textContent, level });
       }
     });
