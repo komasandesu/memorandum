@@ -44,15 +44,14 @@ const TableOfContents: React.FC<TocProps> = ({ toc }) => {
           sx={{
             mb: 4,
             border: `1px solid`,
-            borderColor: theme.palette.mode === 'dark' ? 'grey.600' : 'grey.400',
             p: 2,
             borderRadius: 2,
-            backgroundColor: theme.palette.background.paper,
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <IconButton onClick={() => setIsOpen(false)}>
-                <Typography variant="body1" component="div" >
+                <Typography variant="body1" component="div"
+                sx={{ ml: 1, color: theme.palette.text.primary }} >
                     目次
                 </Typography>
             </IconButton>
@@ -98,10 +97,8 @@ const TableOfContents: React.FC<TocProps> = ({ toc }) => {
           sx={{
             mb: 4,
             border: `1px solid`,
-            borderColor: theme.palette.mode === 'dark' ? 'grey.600' : 'grey.400',
             p: 2,
             borderRadius: 2,
-            backgroundColor: theme.palette.background.paper,
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
