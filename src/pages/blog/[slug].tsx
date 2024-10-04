@@ -20,6 +20,9 @@ import { Theme } from '@mui/material/styles';
 
 import { TableOfContents } from '../../components';
 
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
+
 import { ReactNode } from "react";
 
 const BASE_PATH = process.env.BASE_PATH || '';
@@ -226,9 +229,11 @@ const getStaticProps = async ({ params: { slug } }: StaticProps) => {
   const headingList: { id: string, text: string, level: number }[] = [];
   const mdxSource = await serialize(content, {
     mdxOptions: {
+      remarkPlugins: [remarkMath],
       rehypePlugins: [
         rehypeSlug,
         [rehypeHeadingLinks, headingList],
+        rehypeKatex,
       ],
     },
   });
