@@ -244,7 +244,7 @@ const getStaticProps = async ({ params: { slug } }: StaticProps) => {
   const headingList: { id: string, text: string, level: number }[] = [];
   const mdxSource = await serialize(content, {
     mdxOptions: {
-      
+      remarkPlugins: [remarkMath],
       rehypePlugins: [
         rehypeSlug,
         [rehypeHeadingLinks, headingList],
