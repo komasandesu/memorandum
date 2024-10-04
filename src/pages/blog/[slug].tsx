@@ -71,8 +71,23 @@ const components = (file_name: string) => ({
   Button,
   SyntaxHighlighter,
   Math,
-  code: (props: JSX.IntrinsicAttributes & { children?: ReactNode; className?: string }) => (
+  pre: (props: JSX.IntrinsicAttributes & { children?: ReactNode; className?: string }) => (
     <CodeBlock {...props} />
+  ),
+  // インラインコード用に code を使用
+  code: (props: JSX.IntrinsicAttributes & { children?: ReactNode }) => (
+    <Typography
+      component="code"
+      sx={{
+        backgroundColor: 'rgba(27,31,35,0.05)',
+        fontFamily: 'Menlo, Monaco, Consolas, "Courier New", monospace',
+        padding: '0.2em 0.4em',
+        borderRadius: '3px',
+        fontSize: '85%',
+      }}
+    >
+      {props.children}
+    </Typography>
   ),
   Tweet: ({ id, url }: { id?: string; url?: string }) => {
     // IDまたはURLのいずれかが指定されている場合に対応
@@ -229,7 +244,7 @@ const getStaticProps = async ({ params: { slug } }: StaticProps) => {
   const headingList: { id: string, text: string, level: number }[] = [];
   const mdxSource = await serialize(content, {
     mdxOptions: {
-      remarkPlugins: [remarkMath],
+      
       rehypePlugins: [
         rehypeSlug,
         [rehypeHeadingLinks, headingList],
