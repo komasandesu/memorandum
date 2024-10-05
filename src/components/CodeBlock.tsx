@@ -31,45 +31,53 @@ const CodeBlock: React.FC<Props> = ({ className, children = "" }: Props) => {
   const handleCopy = () => {
     navigator.clipboard.writeText(codeContent).then(() => {
       setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
+      setTimeout(() => setIsCopied(false), 5000);
     });
   };
 
   return (
     <Box sx={{ position: "relative", mt: 2, p: 1, borderRadius: "4px", backgroundColor: "#2d2d2d" }}>
-      {/* 高さを揃えるためのBox */}
       <Box
         sx={{
-          fontWeight: "bold",
-          color: "#ccc",
+          display: "flex",
+          justifyContent: "space-between", // ファイル名とコピーボタンを左右に配置
+          alignItems: "center",
           mb: 1,
           ml: 1,
         }}
       >
-        {filename || <span>&nbsp;</span>} {/* ファイル名がない場合は空のスペースを表示 */}
-      </Box>
-
-      {/* コピーボタンをアイコン形式に変更 */}
-      <Tooltip title={isCopied ? "Copied!" : "Copy"}>
-        <Button
-          variant="contained"
-          size="small"
-          onClick={handleCopy}
+        {/* ファイル名部分 */}
+        <Box
           sx={{
-            position: "absolute",
-            top: "5px",
-            right: "10px",
-            backgroundColor: "#555",
-            color: "#fff",
-            "&:hover": {
-              backgroundColor: "#444"
-            },
-            mr: 1,
+            fontFamily: 'monospace', // 等幅フォントを指定
+            color: "#ccc",
+            overflow: "auto", // 横スクロールを許可
+            whiteSpace: "nowrap", // 折り返さず横に流れるように設定
+            maxWidth: "calc(100% - 50px)", // ボタンのスペースを除いた幅
           }}
         >
-          <ContentCopyIcon fontSize="small" />
-        </Button>
-      </Tooltip>
+          {filename || <span>&nbsp;</span>} {/* ファイル名がない場合は空のスペースを表示 */}
+        </Box>
+
+        {/* コピーボタンをアイコン形式に変更 */}
+        <Tooltip title={isCopied ? "Copied!" : "Copy"}>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={handleCopy}
+            sx={{
+              backgroundColor: "#555",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#444"
+              },
+              ml: 2,
+            }}
+          >
+            <ContentCopyIcon fontSize="small" />
+          </Button>
+        </Tooltip>
+      </Box>
 
       {/* コード表示 */}
       <SyntaxHighlighter language={language} style={atomDark}>
