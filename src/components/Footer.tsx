@@ -44,7 +44,8 @@ const Footer = () => {
 
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="inherit"
+                        size="small"
                         onClick={scrollToTop}
                         sx={{ 
                             marginLeft: 'auto', // ボタンを右に寄せる
