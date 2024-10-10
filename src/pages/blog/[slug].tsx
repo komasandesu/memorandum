@@ -23,7 +23,12 @@ import { TableOfContents } from '../../components';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
 
+import EventIcon from '@mui/icons-material/Event';
+
 import { ReactNode } from "react";
+
+
+import TagList from '../../components/TagList';
 
 const BASE_PATH = process.env.BASE_PATH || '';
 
@@ -143,25 +148,16 @@ const PostPage: React.FC<PostPageProps> = ({ frontMatter: { title, date, tags },
           {title}
         </Typography>
         
-        <Typography variant="body1" color="textSecondary" sx={{ mb: 4 }}>
-          {date}
+        <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+          <EventIcon sx={{ mr: 0.5, fontSize: 16, color: 'primary.main' }} />
+          <Typography variant="body1" color="text.primary" sx={{ fontWeight: 30 }}>
+            {date}
+          </Typography>
         </Typography>
         
-        <Box sx={{ mt: 4, mb: 4  }}>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {tags.map(tag => (
-              <Link href={`/tags/${tag}`} passHref key={tag}>
-                <Chip
-                  label={tag}
-                  clickable
-                  color="primary"
-                  size="small"
-                  sx={{ mr: 1, mb: 1 }}
-                />
-              </Link>
-            ))}
-          </Box>
-        </Box>
+        <TagList tags={tags || []} />
+
+        <Box sx={{ mb: 4 }} /> 
 
         <TableOfContents toc={toc} />
 

@@ -6,6 +6,14 @@ import matter from 'gray-matter';
 import Sidebar from '../components/Sidebar'; // インポート
 import { useState } from 'react';
 
+import TagList from '../components/TagList';
+
+import EventIcon from '@mui/icons-material/Event';
+import LabelIcon from '@mui/icons-material/Label'; // アイコンをインポート
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import SellIcon from '@mui/icons-material/Sell';
+import TagIcon from '@mui/icons-material/Tag';
+
 const BASE_PATH = process.env.BASE_PATH || ''; //サムネイル用
 
 interface FrontMatter {
@@ -92,28 +100,23 @@ const Home: React.FC<HomeProps> = ({ posts, tags }) => {
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                   {post.frontMatter.description}
                 </Typography>
-                <Typography variant="caption" color="text.secondary" sx={{ mb: 2 }}>
-                  {post.frontMatter.date}
+
+                
+                <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+                  <EventIcon sx={{ mr: 0.5, fontSize: 16, color: 'primary.main' }} />
+                  <Typography variant="body2" color="text.primary" sx={{ fontWeight: 30 }}>
+                    {post.frontMatter.date}
+                  </Typography>
                 </Typography>
-            
+
+
+
+                
                 {/* タグの実装 */}
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexWrap: 'nowrap', // 改行を防止
-                    overflowX: 'auto', // 横方向にスクロールを有効にする
-                    overflowY: 'hidden', // 横方向にスクロールを有効にする
-                    width: '100%', // 幅を100%に設定
-                    padding: 1,
-                    height: 40, // 高さを固定することでタグの有無で幅が変わらないようにする
-                  }}
-                >
-                  {post.frontMatter.tags?.map((tag: string) => (
-                    <Link key={tag} href={`/tags/${tag}`} passHref>
-                      <Chip label={tag} sx={{ marginRight: 1 }} color="primary" />
-                    </Link>
-                  ))}
-                </Box>
+                <TagList tags={post.frontMatter.tags || []} />
+
+            
+                
               </CardContent>
             </Card>
           ))}

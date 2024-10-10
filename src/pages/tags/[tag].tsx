@@ -6,6 +6,10 @@ import path from 'path';
 import matter from 'gray-matter';
 import { useEffect, useState } from 'react';
 
+import EventIcon from '@mui/icons-material/Event';
+
+import TagList from '../../components/TagList';
+
 const BASE_PATH = process.env.BASE_PATH || ''; //サムネイル用
 
 interface PostType {
@@ -96,28 +100,17 @@ const TagPage: React.FC<TagPageProps> = ({ posts, tag }) => {
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                     {post.frontMatter.description}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary" sx={{ mb: 2 }}>
-                    {post.frontMatter.date}
+
+                  <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+                    <EventIcon sx={{ mr: 0.5, fontSize: 16, color: 'primary.main' }} />
+                    <Typography variant="body2" color="text.primary" sx={{ fontWeight: 30 }}>
+                      {post.frontMatter.date}
+                    </Typography>
                   </Typography>
               
                   {/* タグの実装 */}
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexWrap: 'nowrap', // 改行を防止
-                      overflowX: 'auto', // 横方向にスクロールを有効にする
-                      overflowY: 'hidden', // 横方向にスクロールを有効にする
-                      width: '100%', // 幅を100%に設定
-                      padding: 1,
-                      height: 40, // 高さを固定することでタグの有無で幅が変わらないようにする
-                    }}
-                  >
-                    {post.frontMatter.tags?.map((tag: string) => (
-                      <Link key={tag} href={`/tags/${tag}`} passHref>
-                        <Chip label={tag} sx={{ marginRight: 1 }} color="primary" />
-                      </Link>
-                    ))}
-                  </Box>
+                  <TagList tags={post.frontMatter.tags || []} />
+
                 </CardContent>
               </Card>
             ))}
