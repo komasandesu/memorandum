@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 import EventIcon from '@mui/icons-material/Event';
 
-import TagList from '../../components/TagList';
+import { TagList } from '../../components';
 
 const BASE_PATH = process.env.BASE_PATH || ''; //サムネイル用
 

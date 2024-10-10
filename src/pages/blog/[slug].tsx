@@ -4,31 +4,24 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import Math from '../../components/Math';
-import { Container, Typography, Box, Chip } from '@mui/material';
-import { Nav, Button, CodeBlock } from '../../components';
-import Link from 'next/link';
 import { TwitterTweetEmbed } from 'react-twitter-embed';
 import Youtube from 'react-youtube';
+
 import rehypeSlug from 'rehype-slug';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
 
 import type { Node } from 'unist';
 import { visit } from 'unist-util-visit';
 import { toString } from 'hast-util-to-string';
 
-import { Theme } from '@mui/material/styles';
-
-import { TableOfContents } from '../../components';
-
-import rehypeKatex from 'rehype-katex';
-import remarkMath from 'remark-math';
-
 import EventIcon from '@mui/icons-material/Event';
+import { Container, Typography, Box } from '@mui/material';
+import { Theme } from '@mui/material/styles';
 
 import { ReactNode } from "react";
 
-
-import TagList from '../../components/TagList';
+import { Button, CodeBlock, Math, TagList, TableOfContents } from '../../components';
 
 const BASE_PATH = process.env.BASE_PATH || '';
 
@@ -72,7 +65,6 @@ const extractTweetId = (url: string): string | undefined => {
 };
 
 const components = (file_name: string) => ({
-  Nav,
   Button,
   SyntaxHighlighter,
   Math,

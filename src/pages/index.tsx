@@ -1,18 +1,15 @@
-import { Box, Card, CardContent, CardMedia, Typography, Container, Chip, Pagination } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Typography, Container, Pagination } from '@mui/material';
 import Link from 'next/link';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import Sidebar from '../components/Sidebar'; // インポート
+
+
+import { TagList, Sidebar } from '../components';
+
 import { useState } from 'react';
 
-import TagList from '../components/TagList';
-
 import EventIcon from '@mui/icons-material/Event';
-import LabelIcon from '@mui/icons-material/Label'; // アイコンをインポート
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import SellIcon from '@mui/icons-material/Sell';
-import TagIcon from '@mui/icons-material/Tag';
 
 const BASE_PATH = process.env.BASE_PATH || ''; //サムネイル用
 

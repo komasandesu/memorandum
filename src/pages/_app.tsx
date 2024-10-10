@@ -1,9 +1,9 @@
 // _app.tsx
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import Head from 'next/head';
-import Nav from '../components/Nav';
-import Footer from '../components/Footer';
 import type { AppProps } from 'next/app';
+
+import { Nav, Footer } from '../components';
 
 export default function App({ Component, pageProps }: AppProps) {
   const theme = createTheme({
