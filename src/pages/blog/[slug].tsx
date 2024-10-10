@@ -4,26 +4,24 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import Math from '../../components/Math';
-import { Container, Typography, Box, Chip } from '@mui/material';
-import { Nav, Button, CodeBlock } from '../../components';
-import Link from 'next/link';
 import { TwitterTweetEmbed } from 'react-twitter-embed';
 import Youtube from 'react-youtube';
+
 import rehypeSlug from 'rehype-slug';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
 
 import type { Node } from 'unist';
 import { visit } from 'unist-util-visit';
 import { toString } from 'hast-util-to-string';
 
+import EventIcon from '@mui/icons-material/Event';
+import { Container, Typography, Box } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 
-import { TableOfContents } from '../../components';
-
-import rehypeKatex from 'rehype-katex';
-import remarkMath from 'remark-math';
-
 import { ReactNode } from "react";
+
+import { Button, CodeBlock, Math, TagList, TableOfContents } from '../../components';
 
 const BASE_PATH = process.env.BASE_PATH || '';
 
@@ -67,7 +65,6 @@ const extractTweetId = (url: string): string | undefined => {
 };
 
 const components = (file_name: string) => ({
-  Nav,
   Button,
   SyntaxHighlighter,
   Math,
@@ -143,25 +140,16 @@ const PostPage: React.FC<PostPageProps> = ({ frontMatter: { title, date, tags },
           {title}
         </Typography>
         
-        <Typography variant="body1" color="textSecondary" sx={{ mb: 4 }}>
-          {date}
+        <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+          <EventIcon sx={{ mr: 0.5, fontSize: 16, color: 'primary.main' }} />
+          <Typography variant="body1" color="text.primary" sx={{ fontWeight: 30 }}>
+            {date}
+          </Typography>
         </Typography>
         
-        <Box sx={{ mt: 4, mb: 4  }}>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {tags.map(tag => (
-              <Link href={`/tags/${tag}`} passHref key={tag}>
-                <Chip
-                  label={tag}
-                  clickable
-                  color="primary"
-                  size="small"
-                  sx={{ mr: 1, mb: 1 }}
-                />
-              </Link>
-            ))}
-          </Box>
-        </Box>
+        <TagList tags={tags || []} />
+
+        <Box sx={{ mb: 4 }} /> 
 
         <TableOfContents toc={toc} />
 
