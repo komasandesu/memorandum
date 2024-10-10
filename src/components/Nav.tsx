@@ -1,25 +1,32 @@
-import { AppBar, Toolbar, Typography, Container, IconButton, Box, List, ListItemButton, ListItemText } from '@mui/material';
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  Container, 
+  IconButton, 
+  Box, 
+  List, 
+  ListItemButton, 
+  ListItemText,
+  Menu,
+  MenuItem
+} from '@mui/material';
 import Link from 'next/link';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InfoIcon from '@mui/icons-material/Info';
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuIcon from '@mui/icons-material/Menu';
-import { PaletteMode } from '@mui/material';
 import { useState } from 'react';
 
-interface NavProps {
-  toggleMode: () => void;
-  currentMode: PaletteMode;
-}
+import ThemeToggle from './ThemeToggle';
+import MobileMenu from './MobileMenu';
 
-const Nav: React.FC<NavProps> = ({ toggleMode, currentMode }) => {
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
+const Nav = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const toggleDrawer = () => {
-    setDrawerOpen((prev) => !prev); // 状態をトグルする
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen((prev) => !prev);
   };
 
   return (
@@ -27,14 +34,8 @@ const Nav: React.FC<NavProps> = ({ toggleMode, currentMode }) => {
       <AppBar position="static" color="primary">
         <Container maxWidth="lg">
           <Toolbar sx={{ justifyContent: 'space-between', position: 'relative' }}>
-            {/* ダークモード切替ボタン */}
-            <IconButton 
-              color="inherit" 
-              edge="start" 
-              onClick={toggleMode}
-            >
-              {currentMode === 'light' ? <LightModeIcon /> : <DarkModeIcon />}
-            </IconButton>
+            {/* テーマ切替ボタン */}
+            <ThemeToggle />
 
 
             {/* タイトルを中央に配置 */}
@@ -47,13 +48,11 @@ const Nav: React.FC<NavProps> = ({ toggleMode, currentMode }) => {
             </Box>
 
             {/* 右側のメニューボタン（小さい画面用） */}
-            <IconButton 
-              color="inherit" 
-              edge="end" 
-              sx={{ 
-                display: { xs: 'block', md: 'none' } 
-              }} 
-              onClick={toggleDrawer} // Drawer の開閉を切り替え
+            <IconButton
+              color="inherit"
+              sx={{ display: { xs: 'block', md: 'none' } }}
+              onClick={toggleMobileMenu}
+              aria-label="Toggle mobile menu"
             >
               <MenuIcon />
             </IconButton>
@@ -75,39 +74,7 @@ const Nav: React.FC<NavProps> = ({ toggleMode, currentMode }) => {
         </Container>
       </AppBar>
 
-      {/* メニューをナビゲーションバーの下に表示 */}
-      {drawerOpen && (
-        <Box
-          sx={{
-            backgroundColor: 'background.paper',
-            padding: 2,
-            boxShadow: 2,
-            transition: 'transform 0.3s ease-in-out',
-            display: { xs: 'block', md: 'none' },
-          }}
-        >
-          <List>
-            <ListItemButton component={Link} href="/bio" passHref >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <InfoIcon />
-                <ListItemText primary="About me" />
-              </Box>
-            </ListItemButton>
-            <ListItemButton component={Link} href="https://twitter.com/k0masandesu" target="_blank" rel="noopener noreferrer">
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <TwitterIcon />
-                <ListItemText primary="Twitter" />
-              </Box>
-            </ListItemButton>
-            <ListItemButton component={Link} href="https://github.com/komasandesu" target="_blank" rel="noopener noreferrer">
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <GitHubIcon />
-                <ListItemText primary="GitHub" />
-              </Box>
-            </ListItemButton>
-          </List>
-        </Box>
-      )}
+      <MobileMenu isOpen={isMobileMenuOpen} />
     </>
   );
 };
