@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardMedia, Typography, Container, Chip, Pagination } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Typography, Container, Pagination } from '@mui/material';
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import fs from 'fs';
