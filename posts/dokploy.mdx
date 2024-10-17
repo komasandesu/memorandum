@@ -1,0 +1,34 @@
+---
+title: Dokployを使ってみる
+date: '2024/10/17'
+description: Herokuみたいなやつ
+thumbnailUrl: '/Dokploy.png'
+tags: ['Dokploy', 'Docker', 'ConohaVPS']
+---
+
+# [Dokploy]とは
+
+- HerokuやVercelのようなホスティングプラットフォームです。[OSS]で開発されており、無料で使えます。
+
+
+# 実際に使ってみる
+
+[Conoha VPS]にインストールして使ってみます。
+
+- 以下のコマンドを打つだけでいいので楽でした。(ポート開放はしておく必要があります)
+
+    ``` bash
+    curl -sSL https://dokploy.com/install.sh | sh
+    ```
+
+GitHubやDockerHubからデプロイできそうです。
+![deploy](/dokploy_setting.png)
+
+Dokcerfileだけでなく、docker-composeにも対応しているらしいです。(自分はまだ使ってません)
+
+環境構築の際には[こちら](https://note.com/yas_bizdev/n/na8940b3c68e3)を参考にしました。
+
+
+[Dokploy]: https://dokploy.com/
+[OSS]: https://github.com/Dokploy/dokploy
+[Conoha VPS]: https://www.conoha.jp/vps/
