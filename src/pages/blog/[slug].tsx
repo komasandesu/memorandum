@@ -17,7 +17,8 @@ import { toString } from 'hast-util-to-string';
 
 import EventIcon from '@mui/icons-material/Event';
 import { Container, Typography, Box } from '@mui/material';
-import { Theme } from '@mui/material/styles';
+// import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 
 import { ReactNode } from "react";
 
@@ -27,6 +28,7 @@ const BASE_PATH = process.env.BASE_PATH || '';
 
 const LinkRenderer = (props: { href?: string; children?: ReactNode }) => {
   const { href, children } = props;
+  const theme = useTheme();  // テーマを取得
 
   return (
     <a
@@ -35,18 +37,14 @@ const LinkRenderer = (props: { href?: string; children?: ReactNode }) => {
       rel="noopener noreferrer"
       style={{ textDecoration: 'none' }}
     >
-      <Typography
-        component="span"
-        sx={{
-          color: (theme: Theme) => theme.palette.mode === 'dark' ? '#ffffff' : '#000000',
+      <span
+        style={{
+          color: theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000',
           textDecoration: 'none',
-          '&:hover': {
-            textDecoration: 'underline',
-          },
         }}
       >
         {children}
-      </Typography>
+      </span>
     </a>
   );
 };
