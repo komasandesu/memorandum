@@ -2,7 +2,7 @@
 title: Q.ドラムに無いものな〜んだ？
 date: '2024/11/21'
 description: ねこ、座布団、セガサターン、ミカヅキモ、おこづかい帳、バチカン市国、液体窒素、週刊誌、消化器系、ミソサザイ、チャイルドシート、釈迦三尊像、瞬足、Anitube、緊急脱出用出口、レレレのおじさん、大憲章、カヤック、千歯扱き、感情、陸軍の統帥権など
-thumbnailUrl: '/Dokploy.png'
+thumbnailUrl: '/animal_music_band_drum.png'
 tags: ['Word2vec', 'なぞなぞ']
 ---
 
@@ -23,7 +23,7 @@ https://x.com/dem08656775/status/1137996272491683840
 
 はじめにファイルをダウンロードして展開します。
 
-```Python
+```python
 import os
 import bz2
 
@@ -49,7 +49,7 @@ print(f"ファイルサイズ: {os.path.getsize(extracted_file_path) / (1024**2)
 
 `ファイルサイズ: 2497.65 MB`とそれなりに大きいですが、LLMと比べるとかなり軽めです。次にWord2vecモデルに埋め込みます。
 
-```Python
+```python
 from gensim.models.keyedvectors import KeyedVectors
 
 # ファイルパス
@@ -64,7 +64,7 @@ word_vectors = KeyedVectors.load_word2vec_format(vector_file_path, binary=False)
 Word2vecでは、[コサイン類似度](https://ja.wikipedia.org/wiki/%E3%82%B3%E3%82%B5%E3%82%A4%E3%83%B3%E9%A1%9E%E4%BC%BC%E5%BA%A6)によって単語間の類似度が測定できます。
 例として、「東京」と類似度の高いものを出力してみます。
 
-```Python
+```python
 # 動作確認: ベクトルを確認
 word = "東京"  # サンプル単語
 # 動作確認: 類似する単語を取得
@@ -85,7 +85,7 @@ for similar_word, similarity in similar_words:
 
 では、ドラムと「ねこ、座布団、…」の類似度はどのようになるでしょうか？
 
-```Python
+```python
 # 単語ベクトル内に存在する単語のみをフィルタリングし、類似度を計算
 def calculate_similarities(word_vectors, base_word, target_words):
     """
@@ -166,7 +166,7 @@ except ValueError as e:
 
 「ドラム」について類似度が0.3以下の単語を出力させてみます。
 
-```Python
+```python
 import random
 
 def sample_similar_words(word, word_vectors, threshold, num_samples):
