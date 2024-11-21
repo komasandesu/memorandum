@@ -1,0 +1,224 @@
+---
+title: Q.ドラムに無いものな〜んだ？
+date: '2024/11/21'
+description: ねこ、座布団、セガサターン、ミカヅキモ、おこづかい帳、バチカン市国、液体窒素、週刊誌、消化器系、ミソサザイ、チャイルドシート、釈迦三尊像、瞬足、Anitube、緊急脱出用出口、レレレのおじさん、大憲章、カヤック、千歯扱き、感情、陸軍の統帥権など
+thumbnailUrl: '/Dokploy.png'
+tags: ['Word2vec', 'なぞなぞ']
+---
+
+# はじめに
+
+こんにちは。突然ですが、皆さんはこんなツイートを知っていますか？
+
+https://x.com/1119_2916/status/1100002429569908736
+
+https://x.com/dem08656775/status/1137996272491683840
+
+ドラムに無いものを列挙しているだけですが、とても面白いです。そこで、今回は自動的にドラムに無いものを列挙してくれるプログラムを作ろうと思います。(今回は[Google Colaboratory](https://colab.research.google.com/?hl=ja)を使います)
+
+# Word2vec
+
+昨今世間を賑やかせているChatGPTなどのLLMでやれば一発でできそうですが、単語を並べるだけなのでもう少し単純な構造でできそうです。
+今回は[Word2vec](https://ja.wikipedia.org/wiki/Word2vec)を使います。学習済みモデルは[東北大](http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/)のものを使います。
+
+はじめにファイルをダウンロードして展開します。
+
+```Python
+import os
+import bz2
+
+# ダウンロード用のリンク
+url = "https://github.com/singletongue/WikiEntVec/releases/download/20190520/jawiki.word_vectors.300d.txt.bz2"
+download_path = "jawiki.word_vectors.300d.txt.bz2"
+
+# ファイルをダウンロード
+!wget -O {download_path} {url}
+
+# 展開先のファイルパス
+extracted_file_path = "jawiki.word_vectors.300d.txt"
+
+# bz2 ファイルを展開
+with bz2.BZ2File(download_path, 'rb') as file_in:
+    with open(extracted_file_path, 'wb') as file_out:
+        file_out.write(file_in.read())
+
+# 展開完了の確認
+print(f"展開が完了しました: {extracted_file_path}")
+print(f"ファイルサイズ: {os.path.getsize(extracted_file_path) / (1024**2):.2f} MB")
+```
+
+`ファイルサイズ: 2497.65 MB`とそれなりに大きいですが、LLMと比べるとかなり軽めです。次にWord2vecモデルに埋め込みます。
+
+```Python
+from gensim.models.keyedvectors import KeyedVectors
+
+# ファイルパス
+vector_file_path = "jawiki.word_vectors.300d.txt"
+
+# ベクトルを読み込む (テキスト形式の埋め込み)
+word_vectors = KeyedVectors.load_word2vec_format(vector_file_path, binary=False)
+```
+
+# 類似度
+
+Word2vecでは、[コサイン類似度](https://ja.wikipedia.org/wiki/%E3%82%B3%E3%82%B5%E3%82%A4%E3%83%B3%E9%A1%9E%E4%BC%BC%E5%BA%A6)によって単語間の類似度が測定できます。
+例として、「東京」と類似度の高いものを出力してみます。
+
+```Python
+# 動作確認: ベクトルを確認
+word = "東京"  # サンプル単語
+# 動作確認: 類似する単語を取得
+similar_words = word_vectors.most_similar(word, topn=5)
+print(f"'{word}' に類似する単語:")
+for similar_word, similarity in similar_words:
+    print(f"  {similar_word}: 類似度 {similarity:.4f}")
+```
+
+実行すると、
+`'東京' に類似する単語:
+  大阪: 類似度 0.7832
+  名古屋: 類似度 0.7182
+  日本橋: 類似度 0.6581
+  新宿: 類似度 0.6558
+  神奈川: 類似度 0.6545`
+となりました。
+
+では、ドラムと「ねこ、座布団、…」の類似度はどのようになるでしょうか？
+
+```Python
+# 単語ベクトル内に存在する単語のみをフィルタリングし、類似度を計算
+def calculate_similarities(word_vectors, base_word, target_words):
+    """
+    基準単語とターゲット単語リストの類似度を計算する。
+
+    Parameters:
+        word_vectors (KeyedVectors): 単語ベクトル。
+        base_word (str): 基準となる単語。
+        target_words (list): 類似度を調べる単語のリスト。
+
+    Returns:
+        list: 各単語の類似度（単語, 類似度）のタプルのリスト。
+    """
+    if base_word not in word_vectors:
+        raise ValueError(f"'{base_word}' は辞書に含まれていません。")
+
+    similarities = []
+    for word in target_words:
+        if word in word_vectors:
+            similarity = word_vectors.similarity(base_word, word)
+            similarities.append((word, similarity))
+        else:
+            print(f"'{word}' は単語ベクトルに含まれていません。")
+    
+    return similarities
+
+# 基準単語と単語リスト
+base_word = "ドラム"
+target_words = [
+    "ねこ", "座布団", "セガサターン", "ミカヅキモ", "おこづかい帳", "バチカン市国", 
+    "液体窒素", "週刊誌", "消化器系", "ミソサザイ", "チャイルドシート", 
+    "釈迦三尊像", "瞬足", "Anitube", "緊急脱出用出口", "レレレのおじさん", 
+    "大憲章", "カヤック", "千歯扱き", "感情", "陸軍の統帥権"
+]
+
+# 類似度を計算
+try:
+    similarities = calculate_similarities(word_vectors, base_word, target_words)
+    # 類似度で降順ソートして表示
+    sorted_similarities = sorted(similarities, key=lambda x: x[1], reverse=True)
+    print(f"'{base_word}' の類似度（降順）:")
+    for word, similarity in sorted_similarities:
+        print(f"{word}: {similarity:.4f}")
+except ValueError as e:
+    print(e)
+```
+
+結果は以下のようになりました。
+`
+'ミカヅキモ' は単語ベクトルに含まれていません。
+'おこづかい帳' は単語ベクトルに含まれていません。
+'消化器系' は単語ベクトルに含まれていません。
+'Anitube' は単語ベクトルに含まれていません。
+'緊急脱出用出口' は単語ベクトルに含まれていません。
+'レレレのおじさん' は単語ベクトルに含まれていません。
+'大憲章' は単語ベクトルに含まれていません。
+'千歯扱き' は単語ベクトルに含まれていません。
+'陸軍の統帥権' は単語ベクトルに含まれていません。
+'ドラム' の類似度（降順）:
+液体窒素: 0.3507
+チャイルドシート: 0.2766
+感情: 0.2256
+座布団: 0.2250
+瞬足: 0.2050
+ねこ: 0.2040
+セガサターン: 0.1680
+カヤック: 0.1532
+ミソサザイ: 0.1433
+釈迦三尊像: 0.1428
+週刊誌: 0.1165
+バチカン市国: 0.0662
+`
+
+液体窒素との類似度が少し高いのが謎ですが、大体0.3以下くらいです。
+そこで、ここからはある単語○○について、「○○にないもの」をその単語とのコサイン類似度が小さいものとして考えます。
+
+# Q.ドラムに無いものな〜んだ？
+
+「ドラム」について類似度が0.3以下の単語を出力させてみます。
+
+```Python
+import random
+
+def sample_similar_words(word, word_vectors, threshold, num_samples):
+    """
+    指定された類似度の閾値以内の単語をランダムにサンプリングします。
+
+    Parameters:
+        word (str): 基準となる単語。
+        word_vectors (KeyedVectors): 単語ベクトル。
+        threshold (float): 類似度の閾値（例: 0.5）。
+        num_samples (int): サンプリングする単語数。
+
+    Returns:
+        list: サンプリングされた単語のリスト。
+    """
+    if word not in word_vectors:
+        raise ValueError(f"'{word}' は辞書に含まれていません。")
+
+    # 類似度を計算し、閾値内の単語をフィルタリング
+    filtered_words = [
+        other_word for other_word in word_vectors.index_to_key
+        if word_vectors.similarity(word, other_word) <= threshold
+    ]
+
+    # サンプリング可能な単語数を確認
+    if len(filtered_words) < num_samples:
+        raise ValueError(
+            f"サンプリング可能な単語が {len(filtered_words)} 個しかありません。"
+        )
+
+    # ランダムにサンプリング
+    sampled_words = random.sample(filtered_words, num_samples)
+
+    return sampled_words
+
+# 使用例
+word = "ドラム"
+threshold = 0.3  # 類似度の閾値
+num_samples = 20  # サンプリングする個数
+
+try:
+    sampled_words = sample_similar_words(word, word_vectors, threshold, num_samples)
+    print(f"'{word}' と類似度が {threshold} 以下の単語（ランダムに {num_samples} 個サンプリング）:")
+    print(sampled_words)
+except ValueError as e:
+    print(e)
+```
+
+出力結果は以下のようになりました。
+`
+'ドラム' と類似度が 0.3 以下の単語（ランダムに 20 個サンプリング）:
+['セラーニク', '島原文化会館', 'ゆずソフト', 'ASF', 'Monteverde', 'オープナー', '語りかけよ', '誘爆', 'コウガネ', 'アランソン', '相撲部', 'アラーナ', '25ユーロ', 'アブドゥライモフ', 'Ascaris', '圖克', '出方', 'glutamatergic', '米城', '207年']
+`
+
+本家とはクオリティの差がありますが、いい感じではないでしょうか。
