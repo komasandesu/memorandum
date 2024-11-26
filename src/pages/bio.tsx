@@ -80,6 +80,16 @@ const Bio: React.FC = () => {
                     >
                         Shitforces
                     </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        href="https://qiita.com/komasandesu"
+                        target="_blank"
+                        rel="noopener"
+                        fullWidth={true} // スマホの場合はボタンをフル幅に
+                    >
+                        Qiita
+                    </Button>
                 </Box>
             </Box>
 
