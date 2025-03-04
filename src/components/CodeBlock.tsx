@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import {Prism, SyntaxHighlighterProps} from 'react-syntax-highlighter';
+const SyntaxHighlighter = (Prism as any) as React.FC<SyntaxHighlighterProps>;
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Button, Tooltip, Box } from "@mui/material";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';

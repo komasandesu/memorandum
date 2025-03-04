@@ -22,7 +22,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-katex": "^3.0.1",
-    "react-syntax-highlighter": "15.5.0",
+    "react-syntax-highlighter": "15.6.0",
     "react-twitter-embed": "^4.0.4",
     "react-youtube": "^10.1.0",
     "rehype-katex": "^7.0.1",
