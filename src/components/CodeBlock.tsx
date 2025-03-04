@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import React, { useState } from "react";
+import SyntaxHighlighterOriginal from "react-syntax-highlighter/dist/cjs/prism";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Button, Tooltip, Box } from "@mui/material";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import React from "react";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+
+// 型キャストして JSX コンポーネントとして扱う
+const SyntaxHighlighter = SyntaxHighlighterOriginal as unknown as React.ComponentType<any>;
 
 type Props = {
   className?: string;
