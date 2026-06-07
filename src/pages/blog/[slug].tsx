@@ -19,7 +19,7 @@ import { Container, Typography, Box } from '@mui/material';
 // import { Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 import { Button, CodeBlock, Math, TagList, TableOfContents } from '../../components';
 
@@ -64,11 +64,11 @@ const extractTweetId = (url: string): string | undefined => {
 const components = (file_name: string) => ({
   Button,
   Math,
-  pre: (props: JSX.IntrinsicAttributes & { children?: ReactNode; className?: string }) => (
+  pre: (props: React.JSX.IntrinsicAttributes & { children?: ReactNode; className?: string }) => (
     <CodeBlock {...props} />
   ),
   // インラインコード用に code を使用
-  code: (props: JSX.IntrinsicAttributes & { children?: ReactNode }) => (
+  code: (props: React.JSX.IntrinsicAttributes & { children?: ReactNode }) => (
     <Typography
       component="code"
       sx={{
@@ -93,7 +93,7 @@ const components = (file_name: string) => ({
     return videoId ? <Youtube videoId={videoId} /> : null;
   },
   a: LinkRenderer,  // aタグの代わりにLinkRendererコンポーネントを使用
-  img: (props: JSX.IntrinsicElements['img']) => (
+  img: (props: React.JSX.IntrinsicElements['img']) => (
     <img {...props} src={`${BASE_PATH}/images/${file_name}/${props.src}`} alt={props.title} style={{ maxWidth: '100%' }} />
   ),
 });
