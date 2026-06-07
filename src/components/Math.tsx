@@ -1,7 +1,7 @@
 // components/Math.tsx
-import { FC } from 'react';
-import { InlineMath, BlockMath } from 'react-katex';
-import 'katex/dist/katex.min.css';
+import { FC } from "react";
+import { InlineMath, BlockMath } from "react-katex";
+import "katex/dist/katex.min.css";
 
 interface MathProps {
   inline?: boolean;

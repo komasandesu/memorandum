@@ -1,31 +1,39 @@
-import { Box, Card, CardContent, CardMedia, Typography, Container, Pagination } from '@mui/material';
-import Link from 'next/link';
-import { GetStaticPaths, GetStaticProps } from 'next';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { useState, useMemo } from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Container,
+  Pagination,
+} from "@mui/material";
+import Link from "next/link";
+import { GetStaticPaths, GetStaticProps } from "next";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { useState, useMemo } from "react";
 
-import EventIcon from '@mui/icons-material/Event';
+import EventIcon from "@mui/icons-material/Event";
 
-import { TagList } from '../../components';
+import { TagList } from "../../components";
 
-const BASE_PATH = process.env.BASE_PATH || ''; //サムネイル用
+const BASE_PATH = process.env.BASE_PATH || ""; //サムネイル用
 
 interface PostType {
-    slug: string;
-    frontMatter: {
-        title: string;
-        description: string;
-        date: string;
-        tags: string[];
-        thumbnailUrl: string;
-    };
+  slug: string;
+  frontMatter: {
+    title: string;
+    description: string;
+    date: string;
+    tags: string[];
+    thumbnailUrl: string;
+  };
 }
 
 interface TagPageProps {
-    posts: PostType[];
-    tag: string;
+  posts: PostType[];
+  tag: string;
 }
 
 const POSTS_PER_PAGE = 10; // 1ページあたりの投稿数
@@ -43,52 +51,54 @@ const TagPage: React.FC<TagPageProps> = ({ posts, tag }) => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 5 }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         <Typography variant="h4" gutterBottom>
-        タグ 「{tag}」 がついている投稿一覧です。
+          タグ 「{tag}」 がついている投稿一覧です。
         </Typography>
         {paginatedPosts.length > 0 ? (
           <Box>
             {paginatedPosts.map((post) => (
-              <Card 
-                key={post.slug} 
-                sx={{ 
-                  mb: 3, 
-                  display: 'flex', 
-                  flexDirection: { xs: 'column', md: 'row' }
+              <Card
+                key={post.slug}
+                sx={{
+                  mb: 3,
+                  display: "flex",
+                  flexDirection: { xs: "column", md: "row" },
                 }}
               >
                 <Link href={`/blog/${post.slug}`} passHref>
                   <CardMedia
                     component="img"
-                    sx={{ 
-                      width: { xs: '100%', md: 200 }, 
-                      height: 170, 
-                      objectFit: 'cover', // 画像のアスペクト比を維持しつつ、カードのサイズにフィットさせる
+                    sx={{
+                      width: { xs: "100%", md: 200 },
+                      height: 170,
+                      objectFit: "cover", // 画像のアスペクト比を維持しつつ、カードのサイズにフィットさせる
                       margin: 0, // マージンをゼロに設定
-                      padding: 0 // パディングもゼロに設定
+                      padding: 0, // パディングもゼロに設定
                     }}
-                    image={`${BASE_PATH}/thumbnails/${post.frontMatter.thumbnailUrl || 'default-thumbnail.png'}`}
+                    image={`${BASE_PATH}/thumbnails/${post.frontMatter.thumbnailUrl || "default-thumbnail.png"}`}
                     alt="thumbnail"
                   />
                 </Link>
-              
-                <CardContent 
-                  sx={{ 
-                    overflowX: 'auto', 
-                    overflowY: 'hidden', 
+
+                <CardContent
+                  sx={{
+                    overflowX: "auto",
+                    overflowY: "hidden",
                     maxHeight: 300,
                   }}
-                > {/* 高さを制限し、オーバーフロー時にスクロール可能に */}
-                  <Link href={`/blog/${post.slug}`} passHref style={{ textDecoration: 'none' }}>
-                    <Typography 
-                      variant="h5" 
+                >
+                  {" "}
+                  {/* 高さを制限し、オーバーフロー時にスクロール可能に */}
+                  <Link href={`/blog/${post.slug}`} passHref style={{ textDecoration: "none" }}>
+                    <Typography
+                      variant="h5"
                       component="div"
                       sx={{
                         color: (theme) => theme.palette.text.primary,
-                        textDecoration: 'none',
-                        '&:hover': {
-                          textDecoration: 'underline',
+                        textDecoration: "none",
+                        "&:hover": {
+                          textDecoration: "underline",
                         },
                       }}
                     >
@@ -98,21 +108,22 @@ const TagPage: React.FC<TagPageProps> = ({ posts, tag }) => {
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                     {post.frontMatter.description}
                   </Typography>
-
-                  <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                    <EventIcon sx={{ mr: 0.5, fontSize: 16, color: 'primary.main' }} />
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ mb: 2, display: "flex", alignItems: "center" }}
+                  >
+                    <EventIcon sx={{ mr: 0.5, fontSize: 16, color: "primary.main" }} />
                     <Typography variant="body2" color="text.primary" sx={{ fontWeight: 30 }}>
                       {post.frontMatter.date}
                     </Typography>
                   </Typography>
-              
                   {/* タグの実装 */}
                   <TagList tags={post.frontMatter.tags || []} />
-
                 </CardContent>
               </Card>
             ))}
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
               <Pagination
                 count={Math.ceil(posts.length / POSTS_PER_PAGE)}
                 page={page}
@@ -130,12 +141,12 @@ const TagPage: React.FC<TagPageProps> = ({ posts, tag }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const files = fs.readdirSync(path.join('posts'));
+  const files = fs.readdirSync(path.join("posts"));
 
   const tags: string[] = [];
 
   files.forEach((filename) => {
-    const markdownWithMeta = fs.readFileSync(path.join('posts', filename), 'utf-8');
+    const markdownWithMeta = fs.readFileSync(path.join("posts", filename), "utf-8");
     const { data: frontMatter } = matter(markdownWithMeta);
 
     if (frontMatter.tags) {
@@ -145,39 +156,40 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   const uniqueTags = Array.from(new Set(tags));
 
-  const paths = uniqueTags.map(tag => ({
-    params: { tag }
+  const paths = uniqueTags.map((tag) => ({
+    params: { tag },
   }));
 
   return {
     paths,
-    fallback: false
+    fallback: false,
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const files = fs.readdirSync(path.join('posts'));
+  const files = fs.readdirSync(path.join("posts"));
 
   const posts = files
     .map((filename) => {
-      const markdownWithMeta = fs.readFileSync(path.join('posts', filename), 'utf-8');
+      const markdownWithMeta = fs.readFileSync(path.join("posts", filename), "utf-8");
       const { data: frontMatter } = matter(markdownWithMeta);
       return {
         frontMatter,
-        slug: filename.split('.')[0]
+        slug: filename.split(".")[0],
       };
     })
-    .filter(post => post.frontMatter.tags.includes(params!.tag as string));
+    .filter((post) => post.frontMatter.tags.includes(params!.tag as string));
 
-    
   // 投稿を更新日が新しい順にソート
-  posts.sort((a, b) => new Date(b.frontMatter.date).getTime() - new Date(a.frontMatter.date).getTime());
+  posts.sort(
+    (a, b) => new Date(b.frontMatter.date).getTime() - new Date(a.frontMatter.date).getTime(),
+  );
 
   return {
     props: {
       posts,
-      tag: params!.tag
-    }
+      tag: params!.tag,
+    },
   };
 };
 

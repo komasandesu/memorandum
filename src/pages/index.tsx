@@ -1,17 +1,24 @@
-import { Box, Card, CardContent, CardMedia, Typography, Container, Pagination } from '@mui/material';
-import Link from 'next/link';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Container,
+  Pagination,
+} from "@mui/material";
+import Link from "next/link";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
 
+import { TagList, Sidebar } from "../components";
 
-import { TagList, Sidebar } from '../components';
+import { useState } from "react";
 
-import { useState } from 'react';
+import EventIcon from "@mui/icons-material/Event";
 
-import EventIcon from '@mui/icons-material/Event';
-
-const BASE_PATH = process.env.BASE_PATH || ''; //サムネイル用
+const BASE_PATH = process.env.BASE_PATH || ""; //サムネイル用
 
 interface FrontMatter {
   title: string;
@@ -46,48 +53,50 @@ const Home: React.FC<HomeProps> = ({ posts, tags }) => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 5 }}>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {paginatedPosts.map((post, index) => (
-            <Card 
-              key={index} 
-              sx={{ 
-                mb: 3, 
-                display: 'flex', 
-                flexDirection: { xs: 'column', md: 'row' }
+            <Card
+              key={index}
+              sx={{
+                mb: 3,
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
               }}
             >
               <Link href={`/blog/${post.slug}`} passHref>
                 <CardMedia
                   component="img"
-                  sx={{ 
-                    width: { xs: '100%', md: 200 }, 
-                    height: 170, 
-                    objectFit: 'cover', // 画像のアスペクト比を維持しつつ、カードのサイズにフィットさせる
+                  sx={{
+                    width: { xs: "100%", md: 200 },
+                    height: 170,
+                    objectFit: "cover", // 画像のアスペクト比を維持しつつ、カードのサイズにフィットさせる
                     margin: 0, // マージンをゼロに設定
-                    padding: 0 // パディングもゼロに設定
+                    padding: 0, // パディングもゼロに設定
                   }}
-                  image={`${BASE_PATH}/thumbnails/${post.frontMatter.thumbnailUrl || 'default-thumbnail.png'}`}
+                  image={`${BASE_PATH}/thumbnails/${post.frontMatter.thumbnailUrl || "default-thumbnail.png"}`}
                   alt="thumbnail"
                 />
               </Link>
-            
-              <CardContent 
-                sx={{ 
-                  overflowX: 'auto', 
-                  overflowY: 'hidden', 
+
+              <CardContent
+                sx={{
+                  overflowX: "auto",
+                  overflowY: "hidden",
                   maxHeight: 300,
                 }}
-              > {/* 高さを制限し、オーバーフロー時にスクロール可能に */}
-                <Link href={`/blog/${post.slug}`} passHref style={{ textDecoration: 'none' }}>
-                  <Typography 
-                    variant="h5" 
+              >
+                {" "}
+                {/* 高さを制限し、オーバーフロー時にスクロール可能に */}
+                <Link href={`/blog/${post.slug}`} passHref style={{ textDecoration: "none" }}>
+                  <Typography
+                    variant="h5"
                     component="div"
                     sx={{
                       color: (theme) => theme.palette.text.primary,
-                      textDecoration: 'none',
-                      '&:hover': {
-                        textDecoration: 'underline',
+                      textDecoration: "none",
+                      "&:hover": {
+                        textDecoration: "underline",
                       },
                     }}
                   >
@@ -97,27 +106,22 @@ const Home: React.FC<HomeProps> = ({ posts, tags }) => {
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                   {post.frontMatter.description}
                 </Typography>
-
-                
-                <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                  <EventIcon sx={{ mr: 0.5, fontSize: 16, color: 'primary.main' }} />
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ mb: 2, display: "flex", alignItems: "center" }}
+                >
+                  <EventIcon sx={{ mr: 0.5, fontSize: 16, color: "primary.main" }} />
                   <Typography variant="body2" color="text.primary" sx={{ fontWeight: 30 }}>
                     {post.frontMatter.date}
                   </Typography>
                 </Typography>
-
-
-
-                
                 {/* タグの実装 */}
                 <TagList tags={post.frontMatter.tags || []} />
-
-            
-                
               </CardContent>
             </Card>
           ))}
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             <Pagination
               count={Math.ceil(posts.length / POSTS_PER_PAGE)}
               page={page}
@@ -126,7 +130,7 @@ const Home: React.FC<HomeProps> = ({ posts, tags }) => {
             />
           </Box>
         </Box>
-        <Box sx={{ flex: { xs: '1 1 100%', md: '0 0 300px' }, minWidth: 0 }}>
+        <Box sx={{ flex: { xs: "1 1 100%", md: "0 0 300px" }, minWidth: 0 }}>
           <Sidebar tags={tags} />
         </Box>
       </Box>
@@ -135,29 +139,30 @@ const Home: React.FC<HomeProps> = ({ posts, tags }) => {
 };
 
 export const getStaticProps = async () => {
-  const files = fs.readdirSync(path.join('posts'));
+  const files = fs.readdirSync(path.join("posts"));
 
-  const posts = files.map(filename => {
-    const markdownWithMeta = fs.readFileSync(path.join('posts', filename), 'utf-8');
+  const posts = files.map((filename) => {
+    const markdownWithMeta = fs.readFileSync(path.join("posts", filename), "utf-8");
     const { data: frontMatter } = matter(markdownWithMeta);
 
     return {
       frontMatter,
-      slug: filename.split('.')[0]
+      slug: filename.split(".")[0],
     };
   });
   // 投稿を更新日が新しい順にソート
-  posts.sort((a, b) => new Date(b.frontMatter.date).getTime() - new Date(a.frontMatter.date).getTime());
-
+  posts.sort(
+    (a, b) => new Date(b.frontMatter.date).getTime() - new Date(a.frontMatter.date).getTime(),
+  );
 
   // タグのリストを取得
-  const tags = Array.from(new Set(posts.flatMap(post => post.frontMatter.tags || [])));
+  const tags = Array.from(new Set(posts.flatMap((post) => post.frontMatter.tags || [])));
 
   return {
     props: {
       posts,
-      tags
-    }
+      tags,
+    },
   };
 };
 

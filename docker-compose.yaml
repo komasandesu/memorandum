@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   next:
@@ -13,4 +13,4 @@ services:
     command: sh -c "yarn run dev && yarn run start"
     user: 0:0
     environment:
-      NODE_ENV: development  # NODE_ENVをdevelopmentに設定
+      NODE_ENV: development # NODE_ENVをdevelopmentに設定

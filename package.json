@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "format": "prettier --write .",
     "export": "next build && next export -o docs"
   },
   "dependencies": {
@@ -38,8 +39,10 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "eslint": "^9.0.0",
     "eslint-config-next": "^16.2.7",
+    "eslint-config-prettier": "^10.1.8",
     "next-mdx-remote": "^6.0.0",
     "postcss": "^8",
+    "prettier": "^3.8.3",
     "tailwindcss": "^3.4.1",
     "typescript": "5.6.2"
   }

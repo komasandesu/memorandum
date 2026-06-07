@@ -1,9 +1,9 @@
 ---
 title: メルカリ競プロコンテスト2024
-date: '2024/10/05'
+date: "2024/10/05"
 description: 解説
-thumbnailUrl: '/Competitive-Programming.png'
-tags: ['競プロ']
+thumbnailUrl: "/Competitive-Programming.png"
+tags: ["競プロ"]
 ---
 
 [コンテストページへのリンク]
@@ -83,7 +83,7 @@ $x$ 成分で考えると、往復しているようになっているので $s_
 ## 解答
 
 $(x_i,y_i)$を$x_i$が小さい順にソートしておきます。
-$z_i$が小さいものから、 $x_j \leq z_j$ を満たす全ての $(x_j,y_j)$ に対して、  `multiset` や `priority_queue` に $y_i$ を突っ込んでシミュレーションします。この際、$z_j \leq y_j$を満たす $y_j$ が存在しない場合は購入せず、存在する場合は条件を満たす最小の $y_j$ を選ぶことで、最適解を達成できます。
+$z_i$が小さいものから、 $x_j \leq z_j$ を満たす全ての $(x_j,y_j)$ に対して、 `multiset` や `priority_queue` に $y_i$ を突っ込んでシミュレーションします。この際、$z_j \leq y_j$を満たす $y_j$ が存在しない場合は購入せず、存在する場合は条件を満たす最小の $y_j$ を選ぶことで、最適解を達成できます。
 
 - [実装](https://mofecoder.com/contests/mercon2024/submissions/15985)
 

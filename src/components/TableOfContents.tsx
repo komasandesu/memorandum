@@ -1,6 +1,6 @@
-import { Box, Typography, IconButton } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { useState } from 'react';
+import { Box, Typography, IconButton } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
 
 interface TocItem {
   id: string;
@@ -28,8 +28,8 @@ const TableOfContents: React.FC<TocProps> = ({ toc }) => {
         counters[i] = 0;
       }
 
-      const numberingString = counters.slice(0, level).join('.');
-      numbering.push(numberingString + '.');
+      const numberingString = counters.slice(0, level).join(".");
+      numbering.push(numberingString + ".");
     });
 
     return numbering;
@@ -48,17 +48,20 @@ const TableOfContents: React.FC<TocProps> = ({ toc }) => {
             borderRadius: 2,
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <IconButton onClick={() => setIsOpen(false)}>
-                <Typography variant="body1" component="div"
-                sx={{ ml: 1, color: theme.palette.text.primary }} >
-                    目次
-                </Typography>
+              <Typography
+                variant="body1"
+                component="div"
+                sx={{ ml: 1, color: theme.palette.text.primary }}
+              >
+                目次
+              </Typography>
             </IconButton>
           </Box>
           <Box
             sx={{
-              listStyle: 'none',
+              listStyle: "none",
               p: 0,
               m: 0,
             }}
@@ -67,8 +70,8 @@ const TableOfContents: React.FC<TocProps> = ({ toc }) => {
               <Box
                 key={heading.id}
                 sx={{
-                  display: 'flex',
-                  alignItems: 'center',
+                  display: "flex",
+                  alignItems: "center",
                   ml: (heading.level - 1) * 2,
                   mb: 1,
                 }}
@@ -77,10 +80,10 @@ const TableOfContents: React.FC<TocProps> = ({ toc }) => {
                   component="a"
                   href={`#${heading.id}`}
                   sx={{
-                    textDecoration: 'none',
+                    textDecoration: "none",
                     color: theme.palette.text.primary,
-                    '&:hover': {
-                      textDecoration: 'underline',
+                    "&:hover": {
+                      textDecoration: "underline",
                     },
                   }}
                 >
@@ -101,7 +104,7 @@ const TableOfContents: React.FC<TocProps> = ({ toc }) => {
             borderRadius: 2,
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <IconButton onClick={() => setIsOpen(true)} size="small">
               <Typography
                 variant="body1"

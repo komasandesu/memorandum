@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface ButtonProps {
   text: string;
@@ -6,7 +6,7 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = ({ text }) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.currentTarget.innerText = '押しちゃった';
+    event.currentTarget.innerText = "押しちゃった";
   };
 
   return (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {Prism, SyntaxHighlighterProps} from 'react-syntax-highlighter';
+import { Prism, SyntaxHighlighterProps } from "react-syntax-highlighter";
 
 const SyntaxHighlighter = Prism as unknown as React.ComponentType<
   SyntaxHighlighterProps & { children: string }
@@ -7,7 +7,7 @@ const SyntaxHighlighter = Prism as unknown as React.ComponentType<
 
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Button, Tooltip, Box } from "@mui/material";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import React from "react";
 
 type Props = {
@@ -21,14 +21,10 @@ const CodeBlock: React.FC<Props> = ({ className, children = "" }: Props) => {
   const isReactElement = React.isValidElement<{ children?: unknown; className?: string }>(children);
 
   // childrenがReact要素の場合は、props.childrenから取得
-  const codeContent = isReactElement
-    ? String(children.props.children ?? "")
-    : String(children);
+  const codeContent = isReactElement ? String(children.props.children ?? "") : String(children);
 
   // childrenがReact要素の場合は、props.classNameから取得
-  const codeClassName = isReactElement
-    ? children.props.className
-    : className;
+  const codeClassName = isReactElement ? children.props.className : className;
 
   // classNameから言語とファイル名を取得
   const match = /language-(\w+)(?::(.+))?/.exec(codeClassName || "");
@@ -43,7 +39,9 @@ const CodeBlock: React.FC<Props> = ({ className, children = "" }: Props) => {
   };
 
   return (
-    <Box sx={{ position: "relative", mt: 2, p: 1, borderRadius: "4px", backgroundColor: "#2d2d2d" }}>
+    <Box
+      sx={{ position: "relative", mt: 2, p: 1, borderRadius: "4px", backgroundColor: "#2d2d2d" }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -56,7 +54,7 @@ const CodeBlock: React.FC<Props> = ({ className, children = "" }: Props) => {
         {/* ファイル名部分 */}
         <Box
           sx={{
-            fontFamily: 'monospace', // 等幅フォントを指定
+            fontFamily: "monospace", // 等幅フォントを指定
             color: "#ccc",
             overflow: "auto", // 横スクロールを許可
             whiteSpace: "nowrap", // 折り返さず横に流れるように設定
@@ -76,7 +74,7 @@ const CodeBlock: React.FC<Props> = ({ className, children = "" }: Props) => {
               backgroundColor: "#555",
               color: "#fff",
               "&:hover": {
-                backgroundColor: "#444"
+                backgroundColor: "#444",
               },
               ml: 2,
             }}

@@ -1,15 +1,15 @@
 // next.config.js
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === "production";
 
-const repositoryName = 'memorandum'; // あなたのGitHubリポジトリ名
+const repositoryName = "memorandum"; // あなたのGitHubリポジトリ名
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'standalone',
-    env: {
-      BASE_PATH: isProd ? `/${repositoryName}` : '',
-    },
-    basePath: isProd ? `/${repositoryName}` : '',
-}
+  output: "standalone",
+  env: {
+    BASE_PATH: isProd ? `/${repositoryName}` : "",
+  },
+  basePath: isProd ? `/${repositoryName}` : "",
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

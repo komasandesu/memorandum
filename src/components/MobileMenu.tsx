@@ -1,8 +1,8 @@
-import { Box, List, ListItemButton, ListItemText } from '@mui/material';
-import Link from 'next/link';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import InfoIcon from '@mui/icons-material/Info';
+import { Box, List, ListItemButton, ListItemText } from "@mui/material";
+import Link from "next/link";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import InfoIcon from "@mui/icons-material/Info";
 
 interface MenuItem {
   icon: React.ElementType;
@@ -18,21 +18,21 @@ interface MobileMenuProps {
 const menuItems: MenuItem[] = [
   {
     icon: InfoIcon,
-    text: 'About me',
-    href: '/bio'
+    text: "About me",
+    href: "/bio",
   },
   {
     icon: TwitterIcon,
-    text: 'Twitter',
-    href: 'https://twitter.com/k0masandesu',
-    isExternal: true
+    text: "Twitter",
+    href: "https://twitter.com/k0masandesu",
+    isExternal: true,
   },
   {
     icon: GitHubIcon,
-    text: 'GitHub',
-    href: 'https://github.com/komasandesu',
-    isExternal: true
-  }
+    text: "GitHub",
+    href: "https://github.com/komasandesu",
+    isExternal: true,
+  },
 ];
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen }) => {
@@ -41,10 +41,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen }) => {
   return (
     <Box
       sx={{
-        backgroundColor: 'background.paper',
+        backgroundColor: "background.paper",
         padding: 2,
         boxShadow: 2,
-        display: { xs: 'block', md: 'none' },
+        display: { xs: "block", md: "none" },
       }}
     >
       <List>
@@ -54,8 +54,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen }) => {
             component={Link}
             href={item.href}
             {...(item.isExternal && {
-              target: '_blank',
-              rel: 'noopener noreferrer'
+              target: "_blank",
+              rel: "noopener noreferrer",
             })}
           >
             <item.icon sx={{ mr: 1 }} />
