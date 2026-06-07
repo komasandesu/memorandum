@@ -18,13 +18,15 @@ type Props = {
 const CodeBlock: React.FC<Props> = ({ className, children = "" }: Props) => {
   const [isCopied, setIsCopied] = useState(false);
 
+  const isReactElement = React.isValidElement<{ children?: unknown; className?: string }>(children);
+
   // childrenがReact要素の場合は、props.childrenから取得
-  const codeContent = React.isValidElement(children)
-    ? children.props.children
-    : children;
+  const codeContent = isReactElement
+    ? String(children.props.children ?? "")
+    : String(children);
 
   // childrenがReact要素の場合は、props.classNameから取得
-  const codeClassName = React.isValidElement(children)
+  const codeClassName = isReactElement
     ? children.props.className
     : className;
 
