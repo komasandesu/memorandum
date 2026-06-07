@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "export": "next build && next export -o docs"
   },
   "dependencies": {
@@ -36,7 +36,7 @@
     "@types/react-dom": "^19.0.0",
     "@types/react-katex": "^3.0.4",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "eslint": "^8",
+    "eslint": "^9.0.0",
     "eslint-config-next": "^16.2.7",
     "next-mdx-remote": "^5.0.0",
     "postcss": "^8",

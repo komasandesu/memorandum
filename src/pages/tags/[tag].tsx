@@ -4,7 +4,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { useEffect, useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import EventIcon from '@mui/icons-material/Event';
 
@@ -32,11 +32,9 @@ const POSTS_PER_PAGE = 10; // 1ページあたりの投稿数
 
 const TagPage: React.FC<TagPageProps> = ({ posts, tag }) => {
   const [page, setPage] = useState<number>(1);
-  const [paginatedPosts, setPaginatedPosts] = useState<PostType[]>([]);
-
-  useEffect(() => {
+  const paginatedPosts = useMemo(() => {
     const startIndex = (page - 1) * POSTS_PER_PAGE;
-    setPaginatedPosts(posts.slice(startIndex, startIndex + POSTS_PER_PAGE));
+    return posts.slice(startIndex, startIndex + POSTS_PER_PAGE);
   }, [page, posts]);
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
